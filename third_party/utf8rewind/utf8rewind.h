@@ -68,6 +68,10 @@
 #include <stdint.h>
 #include <string.h>
 #include <wchar.h>
+#ifdef __linux__
+	#include <strings.h> // strncasecmp
+	#include <sys/types.h> // off_t
+#endif
 
 /*!
 	\addtogroup version
