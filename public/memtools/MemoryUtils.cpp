@@ -38,6 +38,7 @@
 	#include <unistd.h>
 	#include <sys/stat.h>
 	#include <sys/types.h>
+	#include <dlfcn.h>
 
 	#define PAGE_SIZE			4096
 	#define PAGE_ALIGN_UP(x)	((x + PAGE_SIZE - 1) & ~(PAGE_SIZE - 1))
@@ -166,7 +167,7 @@ void *MemoryUtils::ResolveSymbol(void *handle, const char *symbol)
 	{
 		return addr;
 	}
-
+#ifndef __ANDROID__
 	struct link_map *dlmap;
 	struct stat dlstat;
 	int dlfile;
@@ -298,7 +299,8 @@ void *MemoryUtils::ResolveSymbol(void *handle, const char *symbol)
 
 	munmap(file_hdr, dlstat.st_size);
 	return symbol_entry ? symbol_entry->address : NULL;
-
+#endif
+	
 #elif defined(__APPLE__)
 	
 	uintptr_t dlbase, linkedit_addr;

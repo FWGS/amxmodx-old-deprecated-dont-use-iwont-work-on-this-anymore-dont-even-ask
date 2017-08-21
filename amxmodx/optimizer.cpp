@@ -108,12 +108,12 @@ void _Setup_Optimizer_Stage2(AMX *amx, cell *oplist, cell *cip)
 	}
 	if (g_opt_level & 2)
 	{
-#if !defined AMD64
+#if !defined AMD64 && !defined __arm__
 		if (amxx_CpuSupport())
 		{
 #endif
 			FIND_NATIVE("floatcmp", N_Float_Cmp);
-#if !defined AMD64
+#if !defined AMD64 && !defined __arm__
 		} else {
 			g_opt_level &= ~(2);
 		}

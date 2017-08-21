@@ -319,7 +319,7 @@ typedef enum {
 #endif
 
 #if BYTE_ORDER==BIG_ENDIAN || PAWN_CELL_SIZE==32
-  static void swap32(uint32_t *v)
+  static void __amx_swap32(uint32_t *v)
   {
     unsigned char *s = (unsigned char *)v;
     unsigned char t;
@@ -378,7 +378,7 @@ uint32_t * AMXAPI amx_Align32(uint32_t *v)
   assert(sizeof(*v)==4);
   assert(check_endian());
   #if BYTE_ORDER==BIG_ENDIAN
-    swap32(v);
+    __amx_swap32(v);
   #endif
   return v;
 }
@@ -399,7 +399,7 @@ uint64_t * AMXAPI amx_Align64(uint64_t *v)
 #if PAWN_CELL_SIZE==16
   #define swapcell  swap16
 #elif PAWN_CELL_SIZE==32
-  #define swapcell  swap32
+  #define swapcell  __amx_swap32
 #elif PAWN_CELL_SIZE==64 && (defined _I64_MAX || defined HAVE_I64)
   #define swapcell  swap64
 #else

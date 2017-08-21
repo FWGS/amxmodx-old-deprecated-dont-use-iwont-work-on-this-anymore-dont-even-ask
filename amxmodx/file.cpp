@@ -11,6 +11,14 @@
 #include "CFileSystem.h"
 #include "CLibrarySys.h"
 
+#ifdef __ANDROID__
+struct DIR {
+	int fd_;
+};
+#define telldir(x) ((long) lseek(x->fd_, 0, SEEK_CUR))
+#define seekdir(x, loc) lseek(x->fd_, loc, SEEK_SET);
+#endif
+
 using namespace ke;
 
 // native read_dir(const dirname[], pos, output[], len, &outlen = 0);

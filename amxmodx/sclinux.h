@@ -53,7 +53,10 @@
 #endif
 
 #if !defined __BYTE_ORDER
-# error	"Can't figure computer byte order (__BYTE_ORDER macro not found)"
+# include <endian.h>
+# if !defined __BYTE_ORDER
+#  error        "Can't figure computer byte order (__BYTE_ORDER macro not found)"
+# endif
 #endif
 
 

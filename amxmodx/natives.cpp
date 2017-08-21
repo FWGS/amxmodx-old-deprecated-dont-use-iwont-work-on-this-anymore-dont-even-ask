@@ -32,6 +32,30 @@ ke::Vector<regnative *> g_RegNatives;
 static char g_errorStr[512] = {0};
 bool g_Initialized = false;
 
+#ifdef USE_LIBFFCALL
+extern "C" {
+#include <trampoline.h>
+}
+int *g_Id;
+void *GLOBAL_GATE;
+
+typedef int (*amxx_DynaFunc_t)(AMX *amx, cell *params);
+
+extern "C" void amxx_DynaInit(void *ptr)
+{
+    GLOBAL_GATE = ptr;
+}
+
+extern "C" int amxx_DynaFunc(AMX *amx, cell *params)
+{
+	typedef int (*callback_t)(int idx, AMX *amx, cell *params);
+	
+	callback_t callback = (callback_t)GLOBAL_GATE;
+	
+    return callback( *g_Id, amx, params);
+}
+#endif // USE_LIBFFCALL
+
 /* Stack stuff */
 regnative *g_pCurNative = NULL;
 AMX *g_pCaller = NULL;
@@ -460,6 +484,7 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 	
 	//we'll apply a safety buffer too
 	//make our function
+#ifndef USE_LIBFFCALL
 	int size = amxx_DynaCodesize();
 #if defined(_WIN32)
 	DWORD temp;
@@ -473,10 +498,17 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 	pNative->pfn = (char *)mmap(nullptr, size + 10, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
 # endif
 #endif
+#endif // USE_LIBFFCALL
 
 	int id = (int)g_RegNatives.length();
 	
+#ifndef USE_LIBFFCALL
 	amxx_DynaMake(pNative->pfn, id);
+#else
+	pNative->data = new int;
+	(*pNative->data) = id;
+	pNative->pfn = (char *) alloc_trampoline( (__TR_function)amxx_DynaFunc, (void*)g_Id, pNative->data ); //!! CASTING INT TO PTR
+#endif
 	pNative->func = idx;
 	pNative->style = params[3];
 
@@ -492,7 +524,10 @@ void ClearPluginLibraries()
 	ClearLibraries(LibSource_Plugin);
 	for (size_t i=0; i<g_RegNatives.length(); i++)
 	{
-#ifdef __linux__
+#ifdef USE_LIBFFCALL
+		delete g_RegNatives[i]->data;
+		free_trampoline( (__TR_function)g_RegNatives[i]->pfn );
+#elif defined( _linux__ )
 		munmap(g_RegNatives[i]->pfn, amxx_DynaCodesize() + 10);
 #else
 		delete [] g_RegNatives[i]->pfn;

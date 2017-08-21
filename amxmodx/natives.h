@@ -30,6 +30,9 @@ struct regnative
 	char *pfn;
 	int func;
 	int style;
+#ifdef USE_LIBFFCALL
+	int *data;
+#endif
 };
 
 extern "C" void amxx_DynaInit(void *ptr);
