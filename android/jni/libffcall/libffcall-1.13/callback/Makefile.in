@@ -1,0 +1,213 @@
+# Makefile for callback
+
+#### Start of system configuration section. ####
+
+HOST = @host@
+CPU = @HOST_CPU_C_ABI@
+
+# Directories used by "make":
+srcdir = @srcdir@
+
+# Directories used by "make install":
+prefix = @prefix@
+local_prefix = /usr/local
+exec_prefix = @exec_prefix@
+libdir = @libdir@
+includedir = @includedir@
+mandir = @mandir@
+datadir = @datadir@
+datarootdir = @datarootdir@
+htmldir = $(datadir)/html
+
+# Programs used by "make":
+CC = @CC@
+CFLAGS = @CFLAGS@
+CPPFLAGS = @CPPFLAGS@
+CPP = @CPP@
+INCLUDES = -I. -I$(srcdir) -I..
+LDFLAGS = @LDFLAGS@
+LIBTOOL = @LIBTOOL@
+LIBTOOL_LINK = $(LIBTOOL) --mode=link
+LIBTOOL_INSTALL = $(LIBTOOL) --mode=install
+LIBTOOL_UNINSTALL = $(LIBTOOL) --mode=uninstall
+AR = @AR@
+AR_FLAGS = rc
+RANLIB = @RANLIB@
+LN_S = @LN_S@
+RM = rm -f
+@SET_MAKE@
+
+# Programs used by "make install":
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+
+# Libtool options for linking with the thread library.
+LTLIBTHREAD = @LTLIBTHREAD@
+
+#### End of system configuration section. ####
+
+SHELL = /bin/sh
+
+# Needed by $(LIBTOOL).
+top_builddir = ..
+
+all : all-subdirs callback.h vacall_r.h trampoline_r.h libcallback.la $(srcdir)/callback.3 $(srcdir)/callback.html
+
+all-subdirs : force
+	cd @callback_subdir@ && $(MAKE) all
+
+callback.h :
+	$(LN_S) $(srcdir)/callback.h.in callback.h
+
+vacall_r.h :
+	$(LN_S) vacall_r/vacall_r.h vacall_r.h
+
+trampoline_r.h :
+	$(LN_S) trampoline_r/trampoline_r.h trampoline_r.h
+
+libcallback.la : vacall_r/libvacall.la trampoline_r/libtrampoline.la
+	$(LIBTOOL_LINK) $(CC) -o libcallback.la -rpath $(libdir) vacall_r/vacall.lo vacall_r/misc.lo vacall_r/vacall-structcpy.lo trampoline_r/*.lo ../gnulib-lib/libgnu.la $(LDFLAGS) $(LTLIBTHREAD)
+
+# Installs the library and include files only. Typically called with only
+# $(libdir) and $(includedir) - don't use $(prefix) and $(exec_prefix) here.
+install-lib : all force
+	cd @callback_subdir@ && $(MAKE) install-lib libdir='$(libdir)' includedir='$(includedir)'
+	mkdir -p $(libdir)
+	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libcallback.la $(libdir)/libcallback.la
+	mkdir -p $(includedir)
+	$(INSTALL_DATA) callback.h $(includedir)/callback.h
+
+install : force
+	cd @callback_subdir@ && $(MAKE) install
+	mkdir -p $(DESTDIR)$(prefix)
+	mkdir -p $(DESTDIR)$(exec_prefix)
+	mkdir -p $(DESTDIR)$(libdir)
+	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libcallback.la $(DESTDIR)$(libdir)/libcallback.la
+	mkdir -p $(DESTDIR)$(includedir)
+	$(INSTALL_DATA) callback.h $(DESTDIR)$(includedir)/callback.h
+	mkdir -p $(DESTDIR)$(mandir)
+	mkdir -p $(DESTDIR)$(mandir)/man3
+	$(INSTALL_DATA) $(srcdir)/callback.3 $(DESTDIR)$(mandir)/man3/callback.3
+	mkdir -p $(DESTDIR)$(datadir)
+	mkdir -p $(DESTDIR)$(htmldir)
+	$(INSTALL_DATA) $(srcdir)/callback.html $(DESTDIR)$(htmldir)/callback.html
+
+installdirs : force
+	cd @callback_subdir@ && $(MAKE) installdirs
+	mkdir -p $(DESTDIR)$(prefix)
+	mkdir -p $(DESTDIR)$(exec_prefix)
+	mkdir -p $(DESTDIR)$(libdir)
+	mkdir -p $(DESTDIR)$(includedir)
+	mkdir -p $(DESTDIR)$(mandir)
+	mkdir -p $(DESTDIR)$(mandir)/man3
+	mkdir -p $(DESTDIR)$(datadir)
+	mkdir -p $(DESTDIR)$(htmldir)
+
+uninstall : force
+	cd @callback_subdir@ && $(MAKE) uninstall
+	$(LIBTOOL_UNINSTALL) $(RM) $(DESTDIR)$(libdir)/libcallback.la
+	$(RM) $(DESTDIR)$(includedir)/callback.h
+	$(RM) $(DESTDIR)$(mandir)/man3/callback.3
+	$(RM) $(DESTDIR)$(htmldir)/callback.html
+
+test1.o : $(srcdir)/test1.c callback.h vacall_r.h trampoline_r.h
+	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -c $(srcdir)/test1.c
+
+test1 : test1.o libcallback.la
+	$(LIBTOOL_LINK) $(CC) $(CFLAGS) @GCC_X_NONE@ test1.o libcallback.la $(LDFLAGS) -o test1
+
+minitests.o : $(srcdir)/minitests.c $(srcdir)/tests.c callback.h vacall_r.h trampoline_r.h
+	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -c $(srcdir)/minitests.c
+
+minitests.s : $(srcdir)/minitests.c $(srcdir)/tests.c callback.h vacall_r.h trampoline_r.h
+	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -S $(srcdir)/minitests.c
+
+minitests : minitests.o libcallback.la
+	$(LIBTOOL_LINK) $(CC) $(CFLAGS) @GCC_X_NONE@ minitests.o libcallback.la $(LDFLAGS) -o minitests
+
+check-subdirs : force
+	cd @callback_subdir@ && $(MAKE) check
+
+check : all check-subdirs test1 minitests
+	./test1
+	./minitests > minitests.out
+	LC_ALL=C uniq -u < minitests.out > minitests.output.$(HOST)
+	test '!' -s minitests.output.$(HOST)
+
+tests.o : $(srcdir)/tests.c callback.h vacall_r.h trampoline_r.h
+	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -c $(srcdir)/tests.c
+
+tests.s : $(srcdir)/tests.c callback.h vacall_r.h trampoline_r.h
+	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -S $(srcdir)/tests.c
+
+tests : tests.o libcallback.la
+	$(LIBTOOL_LINK) $(CC) $(CFLAGS) @GCC_X_NONE@ tests.o libcallback.la $(LDFLAGS) -o tests
+
+extracheck-subdirs : force
+	cd @callback_subdir@ && $(MAKE) extracheck
+
+extracheck : all extracheck-subdirs tests
+	./tests > tests.out
+	LC_ALL=C uniq -u < tests.out > tests.output.$(HOST)
+	test '!' -s tests.output.$(HOST)
+
+MOSTLYCLEANDIRS = .libs _libs
+MOSTLYCLEANFILES = \
+  *.o *.lo core \
+  callback.h vacall_r.h trampoline_r.h libcallback.* \
+  test1.o test1 \
+  minitests.o minitests.s minitests minitests.out \
+  tests.o tests.s tests tests.out
+
+mostlyclean : force
+	cd @callback_subdir@ && $(MAKE) mostlyclean
+	$(RM) -r $(MOSTLYCLEANDIRS)
+	$(RM) $(MOSTLYCLEANFILES)
+
+clean : force
+	cd @callback_subdir@ && $(MAKE) clean
+	$(RM) -r $(MOSTLYCLEANDIRS)
+	$(RM) $(MOSTLYCLEANFILES)
+
+DISTCLEANFILES = \
+  Makefile \
+  minitests.output.* tests.output.*
+
+distclean : force
+	cd @callback_subdir@ && if test -f Makefile; then $(MAKE) distclean; fi
+	$(RM) -r $(MOSTLYCLEANDIRS)
+	$(RM) $(MOSTLYCLEANFILES)
+	$(RM) $(DISTCLEANFILES)
+
+maintainer-clean : force
+	cd @callback_subdir@ && if test -f Makefile; then $(MAKE) maintainer-clean; fi
+	$(RM) -r $(MOSTLYCLEANDIRS)
+	$(RM) $(MOSTLYCLEANFILES)
+	$(RM) $(DISTCLEANFILES)
+
+
+# List of source files (committed in version control).
+SOURCE_FILES = \
+  COPYING MIGRATION PLATFORMS README callback.3 callback.html elf-hack.txt \
+  Makefile.maint \
+  Makefile.in Makefile.mingw32 Makefile.msvc \
+  callback.h.in \
+  test1.c \
+  minitests.c \
+  tests.c
+# List of distributed files generated by Makefile.maint.
+GENERATED_FILES = \
+  callback.man
+# List of distributed files.
+DISTFILES = $(SOURCE_FILES) $(GENERATED_FILES)
+
+distdir : $(DISTFILES)
+	for file in $(DISTFILES); do \
+	  if test -f $$file; then dir='.'; else dir='$(srcdir)'; fi; \
+	  cp -p "$$dir/$$file" '$(distdir)'/$$file || exit 1; \
+	done
+	test -d '$(distdir)'/@callback_subdir@ || mkdir '$(distdir)'/@callback_subdir@; cd @callback_subdir@ && $(MAKE) distdir distdir='$(distdir)'/@callback_subdir@
+
+
+force :

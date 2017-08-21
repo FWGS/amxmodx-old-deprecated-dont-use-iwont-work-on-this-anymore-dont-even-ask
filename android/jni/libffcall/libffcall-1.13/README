@@ -1,0 +1,124 @@
+libffcall - foreign function call libraries
+
+This is a collection of four libraries which can be used to build
+foreign function call interfaces in embedded interpreters.
+
+The four packages are:
+
+    avcall - calling C functions with variable arguments
+
+    vacall - C functions accepting variable argument prototypes
+
+    trampoline - closures as first-class C functions
+
+    callback - closures with variable arguments as first-class C functions
+               (a reentrant combination of vacall and trampoline)
+
+
+Installation instructions:
+
+        mkdir builddir
+        cd builddir
+        ../configure --cache-file=config.cache
+        make
+        make check
+        make install
+
+
+Note: It is possible to do a build that produces shared libraries (by
+passing --enable-shared to configure), but it makes little sense to do so:
+
+1) The main function here is compiled from non-PIC assembly language.
+   I.e. relocations would remain. The GNU linker supports shared libraries
+   with relocations on x86 systems. But only on x86!
+
+2) It is an overkill: libavcall, libvacall, libcallback have less than 1 KB
+   of executable code (most of the real code is in the header files):
+
+$ size libavcall.a
+  text    data     bss     dec     hex filename
+   420       0       0     420     1a4 avcall.o (ex libavcall.a)
+    81       0       0      81      51 avcall-structcpy.o (ex libavcall.a)
+$ size libvacall.a
+  text    data     bss     dec     hex filename
+   365       0       0     365     16d vacall.o (ex libvacall.a)
+   203       0       0     203      cb misc.o (ex libvacall.a)
+    81       0       0      81      51 vacall-structcpy.o (ex libvacall.a)
+$ size libcallback.a
+  text    data     bss     dec     hex filename
+   379       0       0     379     17b vacall.o (ex libcallback.a)
+   203       0       0     203      cb misc.o (ex libcallback.a)
+    81       0       0      81      51 vacall-structcpy.o (ex libcallback.a)
+   287       0       0     287     11f trampoline.o (ex libcallback.a)
+
+When a shared library is loaded, you spend at least 4 KB for its code,
+data and BSS. This is overkill for such a tiny library.
+
+3) We don't do proper versioning of the resulting shared libraries (yet).
+   Therefore it is possible that upgrading to a newer version of libffcall
+   breaks existing binaries.
+
+
+Files in this package:
+
+    Documentation:
+
+        README          this text
+        COPYING         free software license
+        PLATFORMS       list of supported platforms
+
+    Source:
+
+        avcall/*        the avcall package
+        vacall/*        the vacall package
+        trampoline/*    the trampoline package
+        callback/*      the callback package
+
+    Building:
+
+        configure       configuration script
+        configure.ac    autoconf source for the configuration script
+        m4/*            auxiliary configuration scripts
+        Makefile.in     Makefile master
+
+
+Copyright notice:
+
+Copyright 1993-1995 Bill Triggs <Bill.Triggs@inrialpes.fr>        (original avcall)
+Copyright 1995-2016 Bruno Haible <bruno@clisp.org>                (everything)
+Copyright 1997      Jörg Höhle <Joerg.Hoehle@gmd.de>              (m68k AmigaOS support)
+Copyright 2000      Adam Fedor <fedor@gnu.org>                    (PowerPC MacOS support)
+Copyright 2001-2012 Sam Steingold <sds@gnu.org>                   (build infrastructure)
+Copyright 2001-2002 Gerhard Tonn <GerhardTonn@swol.de> <gt@debian.org> (s390 support)
+Copyright 2004      Paul Guyot <pguyot@kallisys.net>              (PowerPC MacOS support)
+Copyright 2005      Thiemo Seufer <ths@debian.org>                (MIPS EL support)
+Copyright 2009      Max Lapan <max.lapan@gmail.com>               (ARM EL support)
+Copyright 2010      Valery Ushakov <uwe@netbsd.org>               (SPARC64 improvements)
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+Distribution:
+
+git:
+$ git clone git://git.savannah.gnu.org/libffcall.git
+See https://savannah.gnu.org/git/?group=libffcall for more info.
+
+Bug reports to:
+
+  https://savannah.gnu.org/bugs/?func=additem&group=libffcall
+
+Homepage:
+
+  http://www.gnu.org/software/libffcall/

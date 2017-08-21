@@ -1,0 +1,316 @@
+# Makefile for vacall
+
+#### Start of system configuration section. ####
+
+HOST = arm-unknown-linux-androideabi
+CPU = arm
+OS = linux-androideabi
+
+# Directories used by "make":
+srcdir = .
+
+# Directories used by "make install":
+prefix = /usr/local
+local_prefix = /usr/local
+exec_prefix = ${prefix}
+libdir = ${exec_prefix}/lib
+includedir = ${prefix}/include
+mandir = ${datarootdir}/man
+datadir = ${datarootdir}
+datarootdir = ${prefix}/share
+htmldir = $(datadir)/html
+
+# Programs used by "make":
+CC = /home/a1ba/projects/Xash3D/amx/backup/amxmodx/android/jni/libffcall-1.13/arm-linux-androideabi/bin/gcc
+CFLAGS = -g -O2
+CPPFLAGS = 
+CPP = /home/a1ba/projects/Xash3D/amx/backup/amxmodx/android/jni/libffcall-1.13/arm-linux-androideabi/bin/gcc -E
+INCLUDES = -I. -I$(srcdir) -I../..
+ASPFLAGS = `if test false = true; then echo '-DASM_UNDERSCORE'; fi`
+LDFLAGS = 
+LIBTOOL = $(SHELL) $(top_builddir)/libtool
+LIBTOOL_COMPILE = $(LIBTOOL) --mode=compile
+LIBTOOL_LINK = $(LIBTOOL) --mode=link
+LIBTOOL_INSTALL = $(LIBTOOL) --mode=install
+LIBTOOL_UNINSTALL = $(LIBTOOL) --mode=uninstall
+AR = /home/a1ba/projects/Xash3D/amx/backup/amxmodx/android/jni/libffcall-1.13/arm-linux-androideabi/bin/ar
+AR_FLAGS = rc
+RANLIB = ranlib
+MV = mv
+LN = ln
+RM = rm -f
+
+
+# Programs used by "make install":
+INSTALL = /usr/bin/install -c
+INSTALL_PROGRAM = ${INSTALL}
+INSTALL_DATA = ${INSTALL} -m 644
+
+#### End of system configuration section. ####
+
+SHELL = /bin/sh
+
+# Needed by $(LIBTOOL).
+top_builddir = ../..
+
+OBJECTS = vacall.lo misc.lo vacall-structcpy.lo
+
+all : $(OBJECTS) libvacall.la vacall_r.h
+
+vacall.lo : vacall-$(CPU).lo
+	$(RM) vacall.lo vacall.o
+	$(LN) vacall-$(CPU).lo vacall.lo
+	if test -f vacall-$(CPU).o; then $(LN) vacall-$(CPU).o vacall.o; fi
+
+vacall-i386.lo : vacall-i386.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-i386.s
+
+vacall-i386.s : $(srcdir)/vacall-i386-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) -I$(srcdir)/../../common - < $(srcdir)/vacall-i386-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,\. ,.,g' -e 's,@ ,@,g' -e 's,//.*$$,,' -e 's/##//g' > vacall-i386.s
+
+vacall-sparc.lo : vacall-sparc.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-sparc.s
+
+vacall-sparc.s : $(srcdir)/vacall-sparc-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir)/../../common - < $(srcdir)/vacall-sparc-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,\. ,.,g' -e 's,//.*$$,,' -e 's,\$$,#,g' > vacall-sparc.s
+
+vacall-sparc64.lo : vacall-sparc64.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-sparc64.s
+
+vacall-sparc64.s : $(srcdir)/vacall-sparc64-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir)/../../common - < $(srcdir)/vacall-sparc64-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,\. ,.,g' -e 's,//.*$$,,' -e 's,\$$,#,g' > vacall-sparc64.s
+
+vacall-m68k.lo : vacall-m68k.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-m68k.s
+
+vacall-m68k.s : $(srcdir)/vacall-m68k.mit.S $(srcdir)/vacall-m68k.motorola.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) -I$(srcdir)/../../common $(srcdir)/vacall-m68k.mit.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//.*$$,,' | if test false = true; then sed -e 's/\$$//g'; else sed -e 's/\$$/%/g'; fi > vacall-m68k.s
+
+vacall-mips.lo : vacall-mips.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-mips.s
+
+vacall-mips.s : $(srcdir)/vacall-mipsel-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) -I$(srcdir)/../../common $(srcdir)/vacall-mipsel-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//.*$$,,' > vacall-mips.s
+
+vacall-mipsn32.lo : vacall-mipsn32.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-mipsn32.s
+
+vacall-mipsn32.s : $(srcdir)/vacall-mipsn32el-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) -I$(srcdir)/../../common $(srcdir)/vacall-mipsn32el-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//.*$$,,' > vacall-mipsn32.s
+
+vacall-mips64.lo : vacall-mips64.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-mips64.s
+
+vacall-mips64.s : $(srcdir)/vacall-mips64el-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) -I$(srcdir)/../../common $(srcdir)/vacall-mips64el-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//.*$$,,' > vacall-mips64.s
+
+vacall-alpha.lo : vacall-alpha.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-alpha.s
+
+vacall-alpha.s : $(srcdir)/vacall-alpha-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) -I$(srcdir)/../../common $(srcdir)/vacall-alpha-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//.*$$,,' > vacall-alpha.s
+
+vacall-hppa.lo : vacall-hppa.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-hppa.s
+
+vacall-hppa.s : $(srcdir)/vacall-hppa-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir)/../../common $(srcdir)/vacall-hppa-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e "s,!,',g" > vacall-hppa.s
+
+vacall-arm.lo : vacall-arm.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-arm.s
+
+vacall-arm.s : $(srcdir)/vacall-arm-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) -I$(srcdir)/../../common $(srcdir)/vacall-arm-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//,@,g' -e 's,\$$,#,g' > vacall-arm.s
+
+vacall-armhf.lo : vacall-armhf.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-armhf.s
+
+vacall-armhf.s : $(srcdir)/vacall-armhf-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) -I$(srcdir)/../../common $(srcdir)/vacall-armhf-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//,@,g' -e 's,\$$,#,g' > vacall-armhf.s
+
+vacall-arm64.lo : vacall-arm64.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-arm64.s
+
+vacall-arm64.s : $(srcdir)/vacall-arm64-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) -I$(srcdir)/../../common $(srcdir)/vacall-arm64-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//,@,g' -e 's,\$$,#,g' > vacall-arm64.s
+
+vacall-powerpc.lo : vacall-powerpc.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-powerpc.s
+
+vacall-powerpc.s : $(srcdir)/vacall-powerpc-aix.s $(srcdir)/vacall-powerpc-linux-macro.S $(srcdir)/vacall-powerpc-macos.s $(srcdir)/vacall-powerpc-sysv4-macro.S
+	case "$(OS)" in \
+	  aix*) syntax=aix;; \
+	  linux* | netbsd* | openbsd*) syntax=linux;; \
+	  macos* | darwin*) syntax=macos;; \
+	  *) syntax=sysv4;; \
+	esac; \
+	case $${syntax} in \
+	  linux | netbsd | sysv4) \
+	    $(CPP) $(ASPFLAGS) -I$(srcdir) $(srcdir)/vacall-powerpc-$${syntax}-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//,@,g' -e 's,\$$,#,g' > vacall-powerpc.s || exit 1 ;; \
+	  macos) \
+	    grep -v '\.machine' $(srcdir)/vacall-powerpc-$${syntax}.s > vacall-powerpc.s || exit 1 ;; \
+	  *) \
+	    cp $(srcdir)/vacall-powerpc-$${syntax}.s vacall-powerpc.s || exit 1 ;; \
+	esac
+
+vacall-powerpc64.lo : vacall-powerpc64.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-powerpc64.s
+
+vacall-powerpc64.s : $(srcdir)/vacall-powerpc64-aix.s $(srcdir)/vacall-powerpc64-linux.S
+	case "$(OS)" in \
+	  aix*) syntax=aix;; \
+	  *) syntax=linux;; \
+	esac; \
+	case $${syntax} in \
+	  linux) \
+	    $(CPP) $(ASPFLAGS) $(srcdir)/vacall-powerpc64-$${syntax}.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//.*$$,,' > vacall-powerpc64.s || exit 1 ;; \
+	  *) \
+	    cp $(srcdir)/vacall-powerpc64-$${syntax}.s vacall-powerpc64.s || exit 1 ;; \
+	esac
+
+vacall-powerpc64-elfv2.lo : vacall-powerpc64-elfv2.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-powerpc64-elfv2.s
+
+vacall-powerpc64-elfv2.s : $(srcdir)/vacall-powerpc64-elfv2-linux.S
+	$(CPP) $(ASPFLAGS) $(srcdir)/vacall-powerpc64-elfv2-linux.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//.*$$,,' > vacall-powerpc64-elfv2.s
+
+vacall-ia64.lo : vacall-ia64.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-ia64.s
+
+vacall-ia64.s : $(srcdir)/vacall-ia64-macro.S
+	$(CPP) $(ASPFLAGS) $(srcdir)/vacall-ia64-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//.*$$,,' > vacall-ia64.s
+
+vacall-x86_64.lo : vacall-x86_64.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-x86_64.s
+
+vacall-x86_64.s : $(srcdir)/vacall-x86_64-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) -I$(srcdir)/../../common - < $(srcdir)/vacall-x86_64-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,\. ,.,g' -e 's,@ ,@,g' -e 's,//.*$$,,' -e 's/##//g' > vacall-x86_64.s
+
+vacall-x86_64-x32.lo : vacall-x86_64-x32.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-x86_64-x32.s
+
+vacall-x86_64-x32.s : $(srcdir)/vacall-x86_64-x32-linux.s
+	cp $(srcdir)/vacall-x86_64-x32-linux.s vacall-x86_64-x32.s
+
+vacall-s390.lo : vacall-s390.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-s390.s
+
+vacall-s390.s : $(srcdir)/vacall-s390-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) $(srcdir)/vacall-s390-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//.*$$,,' > vacall-s390.s
+
+vacall-s390x.lo : vacall-s390x.s
+	$(LIBTOOL_COMPILE) $(CC) -x none -c vacall-s390x.s
+
+vacall-s390x.s : $(srcdir)/vacall-s390x-macro.S
+	$(CPP) $(ASPFLAGS) -I$(srcdir) $(srcdir)/vacall-s390x-macro.S | grep -v '^ *#line' | grep -v '^#' | sed -e 's,% ,%,g' -e 's,//.*$$,,' > vacall-s390x.s
+
+misc.lo : $(srcdir)/misc.c vacall_r.h ../../config.h
+	$(LIBTOOL_COMPILE) $(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -c $(srcdir)/misc.c
+
+vacall-structcpy.lo : $(srcdir)/vacall-structcpy.c $(srcdir)/../../common/structcpy.c
+	$(LIBTOOL_COMPILE) $(CC) -I$(srcdir)/../../common $(CPPFLAGS) $(CFLAGS) -c $(srcdir)/vacall-structcpy.c
+
+libvacall.la : $(OBJECTS)
+	$(LIBTOOL_LINK) $(CC) -o libvacall.la -rpath $(libdir) $(OBJECTS) $(LDFLAGS)
+
+# Installs the library and include files only. Typically called with only
+# $(libdir) and $(includedir) - don't use $(prefix) and $(exec_prefix) here.
+install-lib : all force
+	mkdir -p $(includedir)
+	$(INSTALL_DATA) vacall_r.h $(includedir)/vacall_r.h
+
+install : all force
+	mkdir -p $(DESTDIR)$(prefix)
+#	mkdir -p $(DESTDIR)$(exec_prefix)
+#	mkdir -p $(DESTDIR)$(libdir)
+#	$(LIBTOOL_INSTALL) $(INSTALL_DATA) libvacall.la $(DESTDIR)$(libdir)/libvacall.la
+	mkdir -p $(DESTDIR)$(includedir)
+	$(INSTALL_DATA) vacall_r.h $(DESTDIR)$(includedir)/vacall_r.h
+#	mkdir -p $(DESTDIR)$(mandir)
+#	mkdir -p $(DESTDIR)$(mandir)/man3
+#	$(INSTALL_DATA) $(srcdir)/vacall_r.3 $(DESTDIR)$(mandir)/man3/vacall_r.3
+#	mkdir -p $(DESTDIR)$(datadir)
+#	mkdir -p $(DESTDIR)$(htmldir)
+#	$(INSTALL_DATA) $(srcdir)/vacall_r.html $(DESTDIR)$(htmldir)/vacall_r.html
+
+installdirs : force
+	mkdir -p $(DESTDIR)$(prefix)
+#	mkdir -p $(DESTDIR)$(exec_prefix)
+#	mkdir -p $(DESTDIR)$(libdir)
+	mkdir -p $(DESTDIR)$(includedir)
+#	mkdir -p $(DESTDIR)$(mandir)
+#	mkdir -p $(DESTDIR)$(mandir)/man3
+#	mkdir -p $(DESTDIR)$(datadir)
+#	mkdir -p $(DESTDIR)$(htmldir)
+
+uninstall : force
+#	$(LIBTOOL_UNINSTALL) $(RM) $(DESTDIR)$(libdir)/libvacall.la
+	$(RM) $(DESTDIR)$(includedir)/vacall_r.h
+#	$(RM) $(DESTDIR)$(mandir)/man3/vacall_r.3
+#	$(RM) $(DESTDIR)$(htmldir)/vacall_r.html
+
+check : all
+
+extracheck : all
+
+mostlyclean : clean
+
+clean : force
+	$(RM) *.o *.lo *.a libvacall.* core
+	$(RM) vacall-i386.s vacall-sparc.s vacall-sparc64.s vacall-m68k.s vacall-mips.s vacall-mipsn32.s vacall-mips64.s vacall-alpha.s vacall-hppa.s vacall-arm.s vacall-armhf.s vacall-arm64.s vacall-powerpc.s vacall-powerpc64.s vacall-powerpc64-elfv2.s vacall-ia64.s vacall-x86_64.s vacall-x86_64-x32.s vacall-s390.s vacall-s390x.s
+	$(RM) -r .libs _libs
+
+distclean : clean
+	$(RM) Makefile vacall_r.h
+
+maintainer-clean : distclean
+
+
+# List of source files (committed in version control or generated by Makefile.devel).
+SOURCE_FILES = \
+  COPYING \
+  README \
+  Makefile.devel \
+  Makefile.maint \
+  Makefile.in Makefile.mingw32 Makefile.msvc \
+  vacall_r.h.in \
+  vacall-alpha.c vacall-alpha-linux.s vacall-alpha-macro.S \
+  vacall-arm.c vacall-arm-macro.S \
+  vacall-armhf.c vacall-armhf-macro.S \
+  vacall-arm64.c vacall-arm64-macro.S \
+  vacall-hppa.c vacall-hppa-linux.s vacall-hppa-macro.S \
+  vacall-i386.c vacall-i386-linux.s vacall-i386-macro.S \
+  vacall-ia64.c vacall-ia64-linux.s vacall-ia64-macro.S \
+  vacall-m68k.c vacall-m68k-linux.s vacall-m68k-sun.s vacall-m68k.mit.S vacall-m68k.motorola.S \
+  vacall-mips.c vacall-mipseb-linux.s vacall-mipsel-linux.s vacall-mipseb-macro.S vacall-mipsel-macro.S \
+  vacall-mipsn32.c vacall-mipsn32eb-linux.s vacall-mipsn32el-linux.s vacall-mipsn32eb-macro.S vacall-mipsn32el-macro.S \
+  vacall-mips64.c vacall-mips64eb-linux.s vacall-mips64el-linux.s vacall-mips64eb-macro.S vacall-mips64el-macro.S \
+  vacall-powerpc.c \
+  vacall-powerpc-aix.s \
+  vacall-powerpc-linux.s vacall-powerpc-linux-macro.S \
+  vacall-powerpc-macos.s \
+  vacall-powerpc-sysv4-macro.S \
+  vacall-powerpc64.c vacall-powerpc64-aix.s vacall-powerpc64-linux.S vacall-powerpc64-elfv2-linux.S \
+  vacall-s390.c vacall-s390-linux.s vacall-s390-macro.S \
+  vacall-s390x.c vacall-s390x-linux.s vacall-s390x-macro.S \
+  vacall-sparc.c vacall-sparc-linux.s vacall-sparc-macro.S \
+  vacall-sparc64.c vacall-sparc64-linux.s vacall-sparc64-macro.S \
+  vacall-x86_64.c vacall-x86_64-linux.s vacall-x86_64-macro.S vacall-x86_64-x32-linux.s \
+  vacall-structcpy.c \
+  misc.c
+# List of distributed files generated by Makefile.maint.
+GENERATED_FILES = \
+  config.h.mingw32 config.h.msvc \
+  vacall_r.h.mingw32 vacall_r.h.msvc \
+  vacall-i386-mingw32.c vacall-i386-msvc.c
+# List of distributed files.
+DISTFILES = $(SOURCE_FILES) $(GENERATED_FILES)
+
+distdir : $(DISTFILES)
+	for file in $(DISTFILES); do \
+	  if test -f $$file; then dir='.'; else dir='$(srcdir)'; fi; \
+	  cp -p "$$dir/$$file" '$(distdir)'/$$file || exit 1; \
+	done
+
+
+force :
