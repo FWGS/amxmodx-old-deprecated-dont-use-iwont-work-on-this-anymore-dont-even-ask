@@ -31,7 +31,13 @@
 
 #include "DataHandler.h"
 
+#include "hook_callbacks.h"
+
 extern bool gDoForwards;
+
+#ifdef USE_LIBFFCALL
+Hook *hook = NULL;
+#endif
 
 // Return value pushes
 #define PUSH_VOID() ReturnStack.push(new Data(RET_VOID, NULL));				OrigReturnStack.push(new Data(RET_VOID, NULL));
@@ -143,7 +149,7 @@ extern bool gDoForwards;
 
 
 
-void Hook_Void_Void(Hook *hook, void *pthis)
+void DECLARE_HOOK(Hook_Void_Void, void *pthis)
 {
 	PUSH_VOID()
 
@@ -165,7 +171,7 @@ void Hook_Void_Void(Hook *hook, void *pthis)
 	POP()
 }
 
-int Hook_Int_Void(Hook *hook, void *pthis)
+int DECLARE_HOOK(Hook_Int_Void, void *pthis)
 {
 	int ret=0;
 	int origret=0;
@@ -194,7 +200,7 @@ int Hook_Int_Void(Hook *hook, void *pthis)
 	return ret;
 }
 
-void Hook_Void_Entvar(Hook *hook, void *pthis, entvars_t *entvar)
+void DECLARE_HOOK(Hook_Void_Entvar, void *pthis, entvars_t *entvar)
 {
 	PUSH_VOID()
 
@@ -223,7 +229,7 @@ void Hook_Void_Entvar(Hook *hook, void *pthis, entvars_t *entvar)
 
 }
 
-void Hook_Void_Cbase(Hook *hook, void *pthis, void *other)
+void DECLARE_HOOK(Hook_Void_Cbase, void *pthis, void *other)
 {
 	PUSH_VOID()
 	int iOther=TypeConversion.cbase_to_id(other);
@@ -250,7 +256,7 @@ void Hook_Void_Cbase(Hook *hook, void *pthis, void *other)
 	POP()
 }
 
-int Hook_Int_Float_Int(Hook *hook, void *pthis, float f1, int i1)
+int DECLARE_HOOK(Hook_Int_Float_Int, void *pthis, float f1, int i1)
 {
 	int ret=0;
 	int origret=0;
@@ -281,7 +287,7 @@ int Hook_Int_Float_Int(Hook *hook, void *pthis, float f1, int i1)
 	return ret;
 }
 
-int Hook_Int_Float_Int_Int(Hook *hook, void *pthis, float f1, int i1, int i2)
+int DECLARE_HOOK(Hook_Int_Float_Int_Int, void *pthis, float f1, int i1, int i2)
 {
 	int ret=0;
 	int origret=0;
@@ -313,7 +319,7 @@ int Hook_Int_Float_Int_Int(Hook *hook, void *pthis, float f1, int i1, int i2)
 	return ret;
 }
 
-void Hook_Void_Entvar_Int(Hook *hook, void *pthis, entvars_t *ev1, int i1)
+void DECLARE_HOOK(Hook_Void_Entvar_Int, void *pthis, entvars_t *ev1, int i1)
 {
 	PUSH_VOID()
 	int iOther=TypeConversion.entvars_to_id(ev1);
@@ -341,7 +347,7 @@ void Hook_Void_Entvar_Int(Hook *hook, void *pthis, entvars_t *ev1, int i1)
 	POP()
 }
 
-void Hook_Void_Entvar_Entvar_Int(Hook *hook, void *pthis, entvars_t *ev1, entvars_t *ev2, int i1)
+void DECLARE_HOOK(Hook_Void_Entvar_Entvar_Int, void *pthis, entvars_t *ev1, entvars_t *ev2, int i1)
 {
 	PUSH_VOID()
 		int iInflictor=TypeConversion.entvars_to_id(ev1);
@@ -371,7 +377,7 @@ void Hook_Void_Entvar_Entvar_Int(Hook *hook, void *pthis, entvars_t *ev1, entvar
 		POP()
 }
 
-int Hook_Int_Cbase(Hook *hook, void *pthis, void *cb1)
+int DECLARE_HOOK(Hook_Int_Cbase, void *pthis, void *cb1)
 {
 	int ret=0;
 	int origret=0;
@@ -403,7 +409,7 @@ int Hook_Int_Cbase(Hook *hook, void *pthis, void *cb1)
 	return ret;
 }
 
-void Hook_Void_Int_Int(Hook *hook, void *pthis, int i1, int i2)
+void DECLARE_HOOK(Hook_Void_Int_Int, void *pthis, int i1, int i2)
 {
 	PUSH_VOID()
 
@@ -429,7 +435,7 @@ void Hook_Void_Int_Int(Hook *hook, void *pthis, int i1, int i2)
 	POP()
 }
 
-int Hook_Int_Int_Str_Int(Hook *hook, void *pthis, int i1, const char *sz1, int i2)
+int DECLARE_HOOK(Hook_Int_Int_Str_Int, void *pthis, int i1, const char *sz1, int i2)
 {
 	int ret=0;
 	int origret=0;
@@ -464,7 +470,7 @@ int Hook_Int_Int_Str_Int(Hook *hook, void *pthis, int i1, const char *sz1, int i
 	return ret;
 }
 
-int Hook_Int_Int_Str_Int_Int(Hook *hook, void *pthis, int i1, const char *sz1, int i2, int i3)
+int DECLARE_HOOK(Hook_Int_Int_Str_Int_Int, void *pthis, int i1, const char *sz1, int i2, int i3)
 {
 	int ret = 0;
 	int origret = 0;
@@ -500,7 +506,7 @@ int Hook_Int_Int_Str_Int_Int(Hook *hook, void *pthis, int i1, const char *sz1, i
 	return ret;
 }
 
-int Hook_Int_Int(Hook *hook, void *pthis, int i1)
+int DECLARE_HOOK(Hook_Int_Int, void *pthis, int i1)
 {
 	int ret=0;
 	int origret=0;
@@ -531,7 +537,7 @@ int Hook_Int_Int(Hook *hook, void *pthis, int i1)
 	return ret;
 }
 
-int Hook_Int_Entvar(Hook *hook, void *pthis, entvars_t *ev1)
+int DECLARE_HOOK(Hook_Int_Entvar, void *pthis, entvars_t *ev1)
 {
 	int ret=0;
 	int origret=0;
@@ -562,7 +568,7 @@ int Hook_Int_Entvar(Hook *hook, void *pthis, entvars_t *ev1)
 	return ret;
 }
 
-int Hook_Int_Entvar_Entvar_Float_Int(Hook *hook, void *pthis, entvars_t *inflictor, entvars_t *attacker, float damage, int damagebits)
+int DECLARE_HOOK(Hook_Int_Entvar_Entvar_Float_Int, void *pthis, entvars_t *inflictor, entvars_t *attacker, float damage, int damagebits)
 {
 	int ret=0;
 	int origret=0;
@@ -596,7 +602,7 @@ int Hook_Int_Entvar_Entvar_Float_Int(Hook *hook, void *pthis, entvars_t *inflict
 	CHECK_RETURN()
 	return ret;
 }
-int Hook_Int_Entvar_Entvar_Float_Float_Int(Hook *hook, void *pthis, entvars_t *inflictor, entvars_t *attacker, float damage, float unknown, int damagebits)
+int DECLARE_HOOK(Hook_Int_Entvar_Entvar_Float_Float_Int, void *pthis, entvars_t *inflictor, entvars_t *attacker, float damage, float unknown, int damagebits)
 {
 	int ret=0;
 	int origret=0;
@@ -632,7 +638,7 @@ int Hook_Int_Entvar_Entvar_Float_Float_Int(Hook *hook, void *pthis, entvars_t *i
 	return ret;
 }
 
-void Hook_Void_Int(Hook *hook, void *pthis, int i1)
+void DECLARE_HOOK(Hook_Void_Int, void *pthis, int i1)
 {
 	PUSH_VOID()
 
@@ -657,7 +663,7 @@ void Hook_Void_Int(Hook *hook, void *pthis, int i1)
 	POP()
 }
 
-float Hook_Float_Int(Hook *hook, void *pthis, int i1)
+float DECLARE_HOOK(Hook_Float_Int, void *pthis, int i1)
 {
 	float ret=0.0;
 	float origret=0.0;
@@ -687,9 +693,9 @@ float Hook_Float_Int(Hook *hook, void *pthis, int i1)
 }
 
 #ifdef _WIN32
-void Hook_Vector_Float_Cbase_Int(Hook *hook, void *pthis, Vector *out, float f1, void *cb, int i1)
+void DECLARE_HOOK(Hook_Vector_Float_Cbase_Int, void *pthis, Vector *out, float f1, void *cb, int i1)
 #elif defined(__linux__) || defined(__APPLE__)
-void Hook_Vector_Float_Cbase_Int(Hook *hook, Vector *out, void *pthis, float f1, void *cb, int i1)
+void DECLARE_HOOK(Hook_Vector_Float_Cbase_Int, Vector *out, void *pthis, float f1, void *cb, int i1)
 #endif
 {
 	Vector ret;
@@ -729,7 +735,7 @@ void Hook_Vector_Float_Cbase_Int(Hook *hook, Vector *out, void *pthis, float f1,
 	memcpy(out, &ret, sizeof(Vector));
 }
 
-void Hook_Void_Cbase_Cbase_Int_Float(Hook *hook, void *pthis, void *cb1, void *cb2, int i1, float f1)
+void DECLARE_HOOK(Hook_Void_Cbase_Cbase_Int_Float, void *pthis, void *cb1, void *cb2, int i1, float f1)
 {
 	PUSH_VOID()
 	int iCaller=TypeConversion.cbase_to_id(cb1);
@@ -760,7 +766,7 @@ void Hook_Void_Cbase_Cbase_Int_Float(Hook *hook, void *pthis, void *cb1, void *c
 	POP()
 }
 
-void Hook_Void_Entvar_Float_Vector_Trace_Int(Hook *hook, void *pthis, entvars_t *ev1, float f1, Vector v1, TraceResult *tr1, int i1)
+void DECLARE_HOOK(Hook_Void_Entvar_Float_Vector_Trace_Int, void *pthis, entvars_t *ev1, float f1, Vector v1, TraceResult *tr1, int i1)
 {
 	PUSH_VOID()
 	int iev1=TypeConversion.entvars_to_id(ev1);
@@ -790,7 +796,7 @@ void Hook_Void_Entvar_Float_Vector_Trace_Int(Hook *hook, void *pthis, entvars_t 
 	POP()
 }
 
-void Hook_Void_Float_Vector_Trace_Int(Hook *hook, void *pthis, float f1, Vector v1, TraceResult *tr1, int i1)
+void DECLARE_HOOK(Hook_Void_Float_Vector_Trace_Int, void *pthis, float f1, Vector v1, TraceResult *tr1, int i1)
 {
 	PUSH_VOID()
 
@@ -818,7 +824,7 @@ void Hook_Void_Float_Vector_Trace_Int(Hook *hook, void *pthis, float f1, Vector 
 	POP()
 }
 
-const char *Hook_Str_Void(Hook *hook, void *pthis)
+const char *DECLARE_HOOK(Hook_Str_Void, void *pthis)
 {
 	ke::AString ret;
 	ke::AString origret;
@@ -845,7 +851,7 @@ const char *Hook_Str_Void(Hook *hook, void *pthis)
 	return ret.chars();
 }
 
-void *Hook_Cbase_Void(Hook *hook, void *pthis)
+void *DECLARE_HOOK(Hook_Cbase_Void, void *pthis)
 {
 	void *ret=NULL;
 	void *origret=NULL;
@@ -873,9 +879,9 @@ void *Hook_Cbase_Void(Hook *hook, void *pthis)
 }
 
 #ifdef _WIN32
-void Hook_Vector_Void(Hook *hook, void *pthis, Vector *out)
+void DECLARE_HOOK(Hook_Vector_Void, void *pthis, Vector *out)
 #elif defined(__linux__) || defined(__APPLE__)
-void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis)
+void DECLARE_HOOK(Hook_Vector_Void, Vector *out, void *pthis)
 #endif
 {
 	Vector ret;
@@ -908,9 +914,9 @@ void Hook_Vector_Void(Hook *hook, Vector *out, void *pthis)
 }
 
 #ifdef _WIN32
-void Hook_Vector_pVector(Hook *hook, void *pthis, Vector *out, Vector *v1)
+void DECLARE_HOOK(Hook_Vector_pVector, void *pthis, Vector *out, Vector *v1)
 #elif defined(__linux__) || defined(__APPLE__)
-void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1)
+void DECLARE_HOOK(Hook_Vector_pVector, Vector *out, void *pthis, Vector *v1)
 #endif
 {
 	Vector ret;
@@ -944,7 +950,7 @@ void Hook_Vector_pVector(Hook *hook, Vector *out, void *pthis, Vector *v1)
 	memcpy(out, &ret, sizeof(Vector));
 }
 
-int Hook_Int_pVector(Hook *hook, void *pthis, Vector *v1)
+int DECLARE_HOOK(Hook_Int_pVector, void *pthis, Vector *v1)
 {
 	int ret=0;
 	int origret=0;
@@ -973,7 +979,7 @@ int Hook_Int_pVector(Hook *hook, void *pthis, Vector *v1)
 	return ret;
 }
 
-void Hook_Void_Entvar_Float_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1, float f2)
+void DECLARE_HOOK(Hook_Void_Entvar_Float_Float, void *pthis, entvars_t *ev1, float f1, float f2)
 {
 	PUSH_VOID()
 	cell cev1=TypeConversion.entvars_to_id(ev1);
@@ -1001,7 +1007,7 @@ void Hook_Void_Entvar_Float_Float(Hook *hook, void *pthis, entvars_t *ev1, float
 	POP()
 }
 
-void Hook_Void_pFloat_pFloat(Hook *hook, void *pthis, float *f1, float *f2)
+void DECLARE_HOOK(Hook_Void_pFloat_pFloat, void *pthis, float *f1, float *f2)
 {
 	PUSH_VOID()
 
@@ -1027,7 +1033,7 @@ void Hook_Void_pFloat_pFloat(Hook *hook, void *pthis, float *f1, float *f2)
 	POP()
 }
 
-void Hook_Void_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
+void DECLARE_HOOK(Hook_Void_Entvar_Float, void *pthis, entvars_t *ev1, float f1)
 {
 	PUSH_VOID()
 	cell cev1=TypeConversion.entvars_to_id(ev1);
@@ -1054,7 +1060,7 @@ void Hook_Void_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
 	POP()
 }
 
-void Hook_Void_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2, int i3)
+void DECLARE_HOOK(Hook_Void_Int_Int_Int, void *pthis, int i1, int i2, int i3)
 {
 	PUSH_VOID()
 
@@ -1080,7 +1086,7 @@ void Hook_Void_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2, int i3)
 	KILL_VECTOR()
 	POP()
 }
-int Hook_Int_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
+int DECLARE_HOOK(Hook_Int_ItemInfo, void *pthis, void *iteminfo)
 {
 	int ret = 0;
 	int origret = 0;
@@ -1111,7 +1117,7 @@ int Hook_Int_ItemInfo(Hook *hook, void *pthis, void *iteminfo)
 	return ret;
 }
 
-float Hook_Float_Void(Hook *hook, void *pthis)
+float DECLARE_HOOK(Hook_Float_Void, void *pthis)
 {
 	float ret=0.0;
 	float origret=0.0;
@@ -1136,7 +1142,7 @@ float Hook_Float_Void(Hook *hook, void *pthis)
 	CHECK_RETURN()
 	return ret;
 }
-void Hook_Void_Float_Int(Hook* hook, void* pthis, float f1, int i1)
+void DECLARE_HOOK(Hook_Void_Float_Int, void* pthis, float f1, int i1)
 {
 	PUSH_VOID()
 
@@ -1161,7 +1167,7 @@ void Hook_Void_Float_Int(Hook* hook, void* pthis, float f1, int i1)
 	POP()
 }
 
-float Hook_Float_Float_Cbase(Hook* hook, void* pthis, float f1, void *cb1)
+float DECLARE_HOOK(Hook_Float_Float_Cbase, void* pthis, float f1, void *cb1)
 {
 	float ret = 0.0;
 	float origret = 0.0;
@@ -1195,7 +1201,7 @@ float Hook_Float_Float_Cbase(Hook* hook, void* pthis, float f1, void *cb1)
 	return ret;
 }
 
-void Hook_Void_Float(Hook* hook, void* pthis, float f1)
+void DECLARE_HOOK(Hook_Void_Float, void* pthis, float f1)
 {
 	PUSH_VOID()
 
@@ -1219,7 +1225,7 @@ void Hook_Void_Float(Hook* hook, void* pthis, float f1)
 	POP()
 }
 
-void Hook_Void_Float_Float_Float_Int(Hook* hook, void* pthis, float f1, float f2, float f3, int i1)
+void DECLARE_HOOK(Hook_Void_Float_Float_Float_Int, void* pthis, float f1, float f2, float f3, int i1)
 {
 	PUSH_VOID()
 
@@ -1247,9 +1253,9 @@ void Hook_Void_Float_Float_Float_Int(Hook* hook, void* pthis, float f1, float f2
 }
 
 #ifdef _WIN32
-void Hook_Vector_Float(Hook *hook, void *pthis, Vector *out, float f1)
+void DECLARE_HOOK(Hook_Vector_Float, void *pthis, Vector *out, float f1)
 #elif defined(__linux__) || defined(__APPLE__)
-void Hook_Vector_Float(Hook *hook, Vector *out, void *pthis, float f1)
+void DECLARE_HOOK(Hook_Vector_Float, Vector *out, void *pthis, float f1)
 #endif
 {
 	Vector ret;
@@ -1284,7 +1290,7 @@ void Hook_Vector_Float(Hook *hook, Vector *out, void *pthis, float f1)
 
 }
 
-void Hook_Void_Float_Cbase(Hook *hook, void *pthis, float f1, void *cb)
+void DECLARE_HOOK(Hook_Void_Float_Cbase, void *pthis, float f1, void *cb)
 {
 	PUSH_VOID()
 	int iEnt =TypeConversion.cbase_to_id(cb);
@@ -1312,7 +1318,7 @@ void Hook_Void_Float_Cbase(Hook *hook, void *pthis, float f1, void *cb)
 	POP()
 }
 
-int Hook_Int_Float_Float(Hook *hook, void *pthis, float f1, float f2)
+int DECLARE_HOOK(Hook_Int_Float_Float, void *pthis, float f1, float f2)
 {
 	int ret=0;
 	int origret=0;
@@ -1345,7 +1351,7 @@ int Hook_Int_Float_Float(Hook *hook, void *pthis, float f1, float f2)
 	return ret;
 }
 
-int Hook_Int_Float(Hook *hook, void *pthis, float f1)
+int DECLARE_HOOK(Hook_Int_Float, void *pthis, float f1)
 {
 	int ret=0;
 	int origret=0;
@@ -1377,7 +1383,7 @@ int Hook_Int_Float(Hook *hook, void *pthis, float f1)
 	return ret;
 }
 
-int Hook_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2)
+int DECLARE_HOOK(Hook_Int_Int_Int, void *pthis, int i1, int i2)
 {
 	int ret=0;
 	int origret=0;
@@ -1410,7 +1416,7 @@ int Hook_Int_Int_Int(Hook *hook, void *pthis, int i1, int i2)
 	return ret;
 }
 
-void Hook_Void_Str_Float_Float_Float(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3)
+void DECLARE_HOOK(Hook_Void_Str_Float_Float_Float, void *pthis, const char *sz1, float f1, float f2, float f3)
 {
 	ke::AString a;
 
@@ -1443,7 +1449,7 @@ void Hook_Void_Str_Float_Float_Float(Hook *hook, void *pthis, const char *sz1, f
 	POP()
 }
 
-void Hook_Void_Str_Float_Float_Float_Int_Cbase(Hook *hook, void *pthis, const char *sz1, float f1, float f2, float f3, int i1, void *cb)
+void DECLARE_HOOK(Hook_Void_Str_Float_Float_Float_Int_Cbase, void *pthis, const char *sz1, float f1, float f2, float f3, int i1, void *cb)
 {
 	ke::AString a;
 
@@ -1479,7 +1485,7 @@ void Hook_Void_Str_Float_Float_Float_Int_Cbase(Hook *hook, void *pthis, const ch
 	POP()
 }
 
-int Hook_Int_Vector_Vector_Float_Float(Hook *hook, void *pthis, Vector v1, Vector v2, float f1, float f2)
+int DECLARE_HOOK(Hook_Int_Vector_Vector_Float_Float, void *pthis, Vector v1, Vector v2, float f1, float f2)
 {
 	int ret=0;
 	int origret=0;
@@ -1518,7 +1524,7 @@ int Hook_Int_Vector_Vector_Float_Float(Hook *hook, void *pthis, Vector v1, Vecto
 	return ret;
 }
 
-int Hook_Int_Short(Hook *hook, void *pthis, short s1)
+int DECLARE_HOOK(Hook_Int_Short, void *pthis, short s1)
 {
 	int ret=0;
 	int origret=0;
@@ -1550,7 +1556,7 @@ int Hook_Int_Short(Hook *hook, void *pthis, short s1)
 	return ret;
 }
 
-void Hook_Void_Entvar_Entvar_Float_Int_Int(Hook *hook, void *pthis, entvars_t *inflictor, entvars_t *attacker, float damage, int classignore, int damagebits)
+void DECLARE_HOOK(Hook_Void_Entvar_Entvar_Float_Int_Int, void *pthis, entvars_t *inflictor, entvars_t *attacker, float damage, int classignore, int damagebits)
 {
 	PUSH_VOID()
 
@@ -1584,7 +1590,7 @@ void Hook_Void_Entvar_Entvar_Float_Int_Int(Hook *hook, void *pthis, entvars_t *i
 	POP()
 }
 
-void Hook_Void_Vector_Entvar_Entvar_Float_Int_Int(Hook *hook, void *pthis, Vector source, entvars_t *inflictor, entvars_t *attacker, float damage, int classignore, int damagebits)
+void DECLARE_HOOK(Hook_Void_Vector_Entvar_Entvar_Float_Int_Int, void *pthis, Vector source, entvars_t *inflictor, entvars_t *attacker, float damage, int classignore, int damagebits)
 {
 	PUSH_VOID()
 
@@ -1621,7 +1627,7 @@ void Hook_Void_Vector_Entvar_Entvar_Float_Int_Int(Hook *hook, void *pthis, Vecto
 	POP()
 }
 
-float Hook_Float_Int_Float(Hook *hook, void *pthis, int i1, float f2)
+float DECLARE_HOOK(Hook_Float_Int_Float, void *pthis, int i1, float f2)
 {
 	float ret=0.0;
 	float origret=0.0;
@@ -1654,7 +1660,7 @@ float Hook_Float_Int_Float(Hook *hook, void *pthis, int i1, float f2)
 	return ret;
 }
 
-int Hook_Int_Str(Hook *hook, void *pthis, const char *sz1)
+int DECLARE_HOOK(Hook_Int_Str, void *pthis, const char *sz1)
 {
 	int ret=0;
 	int origret=0;
@@ -1688,7 +1694,7 @@ int Hook_Int_Str(Hook *hook, void *pthis, const char *sz1)
 	return ret;
 }
 
-void Hook_Void_Edict(Hook *hook, void *pthis, edict_t *ed1)
+void DECLARE_HOOK(Hook_Void_Edict, void *pthis, edict_t *ed1)
 {
 	PUSH_VOID()
 
@@ -1715,7 +1721,7 @@ void Hook_Void_Edict(Hook *hook, void *pthis, edict_t *ed1)
 	POP()
 }
 
-void Hook_Void_Int_Str_Bool(Hook *hook, void *pthis, int i1, const char *sz2, bool b3)
+void DECLARE_HOOK(Hook_Void_Int_Str_Bool, void *pthis, int i1, const char *sz2, bool b3)
 {
 	PUSH_VOID()
 	//String a=sz2;
@@ -1744,7 +1750,7 @@ void Hook_Void_Int_Str_Bool(Hook *hook, void *pthis, int i1, const char *sz2, bo
 	POP()
 }
 
-void Hook_Void_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2)
+void DECLARE_HOOK(Hook_Void_Vector_Vector, void *pthis, Vector v1, Vector v2)
 {
 	PUSH_VOID()
 
@@ -1773,7 +1779,7 @@ void Hook_Void_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2)
 	POP()
 }
 
-void Hook_Void_Str_Bool(Hook *hook, void *pthis, const char *sz1, bool b2)
+void DECLARE_HOOK(Hook_Void_Str_Bool, void *pthis, const char *sz1, bool b2)
 {
 	ke::AString a;
 
@@ -1804,7 +1810,7 @@ void Hook_Void_Str_Bool(Hook *hook, void *pthis, const char *sz1, bool b2)
 	POP()
 }
 
-int Hook_Int_Str_Str_Int_Str_Int_Int(Hook *hook, void *pthis, const char *sz1, const char *sz2, int i1, const char *sz3, int i2, int i3)
+int DECLARE_HOOK(Hook_Int_Str_Str_Int_Str_Int_Int, void *pthis, const char *sz1, const char *sz2, int i1, const char *sz3, int i2, int i3)
 {
 	int ret=0;
 	int origret=0;
@@ -1841,7 +1847,7 @@ int Hook_Int_Str_Str_Int_Str_Int_Int(Hook *hook, void *pthis, const char *sz1, c
 	return ret;
 }
 
-int Hook_Int_Int_Int_Float_Int(Hook *hook, void *pthis, int i1, int i2, float f1, int i3)
+int DECLARE_HOOK(Hook_Int_Int_Int_Float_Int, void *pthis, int i1, int i2, float f1, int i3)
 {
 	int ret=0;
 	int origret=0;
@@ -1876,7 +1882,7 @@ int Hook_Int_Int_Int_Float_Int(Hook *hook, void *pthis, int i1, int i2, float f1
 	return ret;
 }
 
-void Hook_Void_Str_Int(Hook *hook, void *pthis, const char *sz1, int i2)
+void DECLARE_HOOK(Hook_Void_Str_Int, void *pthis, const char *sz1, int i2)
 {
 	ke::AString a;
 
@@ -1907,7 +1913,7 @@ void Hook_Void_Str_Int(Hook *hook, void *pthis, const char *sz1, int i2)
 	POP()
 }
 
-void Hook_Void_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
+void DECLARE_HOOK(Hook_Void_Cbase_Int, void *pthis, void *p1, int i1)
 {
 	PUSH_VOID()
 	int iEnt =TypeConversion.cbase_to_id(p1);
@@ -1935,7 +1941,7 @@ void Hook_Void_Cbase_Int(Hook *hook, void *pthis, void *p1, int i1)
 	POP()
 }
 
-void Hook_Void_Str(Hook *hook, void *pthis, const char *sz1)
+void DECLARE_HOOK(Hook_Void_Str, void *pthis, const char *sz1)
 {
 	ke::AString a;
 
@@ -1965,7 +1971,7 @@ void Hook_Void_Str(Hook *hook, void *pthis, const char *sz1)
 	POP()
 }
 
-void Hook_Void_Vector(Hook *hook, void *pthis, Vector v1)
+void DECLARE_HOOK(Hook_Void_Vector, void *pthis, Vector v1)
 {
 	PUSH_VOID()
 
@@ -1990,7 +1996,7 @@ void Hook_Void_Vector(Hook *hook, void *pthis, Vector v1)
 	POP()
 }
 
-int Hook_Int_Str_Vector_Str(Hook *hook, void *pthis, const char *sz1, Vector v2, const char *sz2)
+int DECLARE_HOOK(Hook_Int_Str_Vector_Str, void *pthis, const char *sz1, Vector v2, const char *sz2)
 {
 	int ret=0;
 	int origret=0;
@@ -2029,7 +2035,7 @@ int Hook_Int_Str_Vector_Str(Hook *hook, void *pthis, const char *sz1, Vector v2,
 	return ret;
 }
 
-int Hook_Int_Str_Str(Hook *hook, void *pthis, const char *sz1, const char *sz2)
+int DECLARE_HOOK(Hook_Int_Str_Str, void *pthis, const char *sz1, const char *sz2)
 {
 	int ret=0;
 	int origret=0;
@@ -2067,7 +2073,7 @@ int Hook_Int_Str_Str(Hook *hook, void *pthis, const char *sz1, const char *sz2)
 	return ret;
 }
 
-void Hook_Void_Float_Float(Hook *hook, void *pthis, float f1, float f2)
+void DECLARE_HOOK(Hook_Void_Float_Float, void *pthis, float f1, float f2)
 {
 	PUSH_VOID()
 
@@ -2093,7 +2099,7 @@ void Hook_Void_Float_Float(Hook *hook, void *pthis, float f1, float f2)
 	POP()
 }
 
-void Hook_Void_Str_Str_Int(Hook *hook, void *pthis, const char *sz1, const char *sz2, int i3)
+void DECLARE_HOOK(Hook_Void_Str_Str_Int, void *pthis, const char *sz1, const char *sz2, int i3)
 {
 	ke::AString a;
 	ke::AString b;
@@ -2127,7 +2133,7 @@ void Hook_Void_Str_Str_Int(Hook *hook, void *pthis, const char *sz1, const char 
 	POP()
 }
 
-int Hook_Int_pVector_pVector_Cbase_pFloat(Hook *hook, void *pthis, Vector *v1, Vector *v2, void* cb, float* fl)
+int DECLARE_HOOK(Hook_Int_pVector_pVector_Cbase_pFloat, void *pthis, Vector *v1, Vector *v2, void* cb, float* fl)
 {
 	int ret=0;
 	int origret=0;
@@ -2168,7 +2174,7 @@ int Hook_Int_pVector_pVector_Cbase_pFloat(Hook *hook, void *pthis, Vector *v1, V
 	return ret;
 }
 
-void Hook_Void_Cbase_pVector_Float(Hook *hook, void *pthis, void *p1, Vector *v1, float fl)
+void DECLARE_HOOK(Hook_Void_Cbase_pVector_Float, void *pthis, void *p1, Vector *v1, float fl)
 {
 	PUSH_VOID()
 	int iEnt =TypeConversion.cbase_to_id(p1);
@@ -2197,7 +2203,7 @@ void Hook_Void_Cbase_pVector_Float(Hook *hook, void *pthis, void *p1, Vector *v1
 	POP()
 }
 
-int Hook_Int_pVector_pVector_Float_Cbase_pVector(Hook *hook, void *pthis, Vector *v1, Vector *v2, float fl, void* cb, Vector *v3)
+int DECLARE_HOOK(Hook_Int_pVector_pVector_Float_Cbase_pVector, void *pthis, Vector *v1, Vector *v2, float fl, void* cb, Vector *v3)
 {
 	int ret=0;
 	int origret=0;
@@ -2241,7 +2247,7 @@ int Hook_Int_pVector_pVector_Float_Cbase_pVector(Hook *hook, void *pthis, Vector
 	return ret;
 }
 
-int Hook_Int_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1)
+int DECLARE_HOOK(Hook_Int_Cbase_Bool, void *pthis, void *cb1, bool b1)
 {
 	int ret=0;
 	int origret=0;
@@ -2274,7 +2280,7 @@ int Hook_Int_Cbase_Bool(Hook *hook, void *pthis, void *cb1, bool b1)
 	return ret;
 }
 
-int Hook_Int_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2)
+int DECLARE_HOOK(Hook_Int_Vector_Vector, void *pthis, Vector v1, Vector v2)
 {
 	int ret=0;
 	int origret=0;
@@ -2309,7 +2315,7 @@ int Hook_Int_Vector_Vector(Hook *hook, void *pthis, Vector v1, Vector v2)
 	return ret;
 }
 
-int Hook_Int_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
+int DECLARE_HOOK(Hook_Int_Entvar_Float, void *pthis, entvars_t *ev1, float f1)
 {
 	int ret=0;
 	int origret=0;
@@ -2341,7 +2347,7 @@ int Hook_Int_Entvar_Float(Hook *hook, void *pthis, entvars_t *ev1, float f1)
 	return ret;
 }
 
-float Hook_Float_Float(Hook *hook, void *pthis, float f1)
+float DECLARE_HOOK(Hook_Float_Float, void *pthis, float f1)
 {
 	float ret=0.0;
 	float origret=0.0;
@@ -2371,7 +2377,7 @@ float Hook_Float_Float(Hook *hook, void *pthis, float f1)
 	return ret;
 }
 
-void Hook_Void_Entvar_Entvar_Float(Hook *hook, void *pthis, entvars_t *attacker, entvars_t *inflictor, float damage)
+void DECLARE_HOOK(Hook_Void_Entvar_Entvar_Float, void *pthis, entvars_t *attacker, entvars_t *inflictor, float damage)
 {
 	PUSH_VOID()
 
@@ -2403,7 +2409,7 @@ void Hook_Void_Entvar_Entvar_Float(Hook *hook, void *pthis, entvars_t *attacker,
 	POP()
 }
 
-bool Hook_Bool_Void(Hook *hook, void *pthis)
+bool DECLARE_HOOK(Hook_Bool_Void, void *pthis)
 {
 	bool ret=0;
 	bool origret=0;
@@ -2431,7 +2437,7 @@ bool Hook_Bool_Void(Hook *hook, void *pthis)
 	return ret;
 }
 
-int Hook_Int_pVector_pVector_Float_Cbase_pVector_pVector_Bool(Hook *hook, void *pthis, Vector *v1, Vector *v2, float fl, void* cb, Vector *v3, Vector *v4, bool b1)
+int DECLARE_HOOK(Hook_Int_pVector_pVector_Float_Cbase_pVector_pVector_Bool, void *pthis, Vector *v1, Vector *v2, float fl, void* cb, Vector *v3, Vector *v4, bool b1)
 {
 	int ret=0;
 	int origret=0;
@@ -2482,7 +2488,7 @@ int Hook_Int_pVector_pVector_Float_Cbase_pVector_pVector_Bool(Hook *hook, void *
 	return ret;
 }
 
-int Hook_Int_Vector_Cbase(Hook *hook, void *pthis, Vector v1, void* cb)
+int DECLARE_HOOK(Hook_Int_Vector_Cbase, void *pthis, Vector v1, void* cb)
 {
 	int ret=0;
 	int origret=0;
@@ -2517,7 +2523,7 @@ int Hook_Int_Vector_Cbase(Hook *hook, void *pthis, Vector v1, void* cb)
 	return ret;
 }
 
-int Hook_Int_Vector(Hook *hook, void *pthis, Vector v1)
+int DECLARE_HOOK(Hook_Int_Vector, void *pthis, Vector v1)
 {
 	int ret=0;
 	int origret=0;
@@ -2549,7 +2555,7 @@ int Hook_Int_Vector(Hook *hook, void *pthis, Vector v1)
 	return ret;
 }
 
-int Hook_Int_Cbase_pVector(Hook *hook, void *pthis, void *cb1, Vector *v1)
+int DECLARE_HOOK(Hook_Int_Cbase_pVector, void *pthis, void *cb1, Vector *v1)
 {
 	int ret=0;
 	int origret=0;
@@ -2584,7 +2590,7 @@ int Hook_Int_Cbase_pVector(Hook *hook, void *pthis, void *cb1, Vector *v1)
 	return ret;
 }
 
-void Hook_Void_Bool(Hook *hook, void *pthis, bool b1)
+void DECLARE_HOOK(Hook_Void_Bool, void *pthis, bool b1)
 {
 	PUSH_VOID()
 
@@ -2609,7 +2615,7 @@ void Hook_Void_Bool(Hook *hook, void *pthis, bool b1)
 	POP()
 }
 
-bool Hook_Bool_Cbase(Hook *hook, void *pthis, void *cb)
+bool DECLARE_HOOK(Hook_Bool_Cbase, void *pthis, void *cb)
 {
 	bool ret=0;
 	bool origret=0;
@@ -2643,7 +2649,7 @@ bool Hook_Bool_Cbase(Hook *hook, void *pthis, void *cb)
 	return ret;
 }
 
-bool Hook_Bool_Int(Hook *hook, void *pthis, int i1)
+bool DECLARE_HOOK(Hook_Bool_Int, void *pthis, int i1)
 {
 	bool ret=0;
 	bool origret=0;
@@ -2676,7 +2682,7 @@ bool Hook_Bool_Int(Hook *hook, void *pthis, int i1)
 }
 
 
-void Hook_Void_Cbase_Float(Hook *hook, void *pthis, void *p1, float f1)
+void DECLARE_HOOK(Hook_Void_Cbase_Float, void *pthis, void *p1, float f1)
 {
 	PUSH_VOID()
 		int iEnt =TypeConversion.cbase_to_id(p1);
@@ -2705,7 +2711,7 @@ void Hook_Void_Cbase_Float(Hook *hook, void *pthis, void *p1, float f1)
 }
 
 
-void Hook_Void_Cbase_Bool(Hook *hook, void *pthis, void *p1, bool b1)
+void DECLARE_HOOK(Hook_Void_Cbase_Bool, void *pthis, void *p1, bool b1)
 {
 	PUSH_VOID()
 	int iEnt =TypeConversion.cbase_to_id(p1);
@@ -2734,9 +2740,9 @@ void Hook_Void_Cbase_Bool(Hook *hook, void *pthis, void *p1, bool b1)
 }
 
 #ifdef _WIN32
-void Hook_Vector_Vector_Vector_Vector(Hook *hook, void *pthis, Vector *out, Vector v1, Vector v2, Vector v3)
+void DECLARE_HOOK(Hook_Vector_Vector_Vector_Vector, void *pthis, Vector *out, Vector v1, Vector v2, Vector v3)
 #elif defined(__linux__) || defined(__APPLE__)
-void Hook_Vector_Vector_Vector_Vector(Hook *hook, Vector *out, void *pthis, Vector v1, Vector v2, Vector v3)
+void DECLARE_HOOK(Hook_Vector_Vector_Vector_Vector, Vector *out, void *pthis, Vector v1, Vector v2, Vector v3)
 #endif
 {
 	Vector ret;
@@ -2778,7 +2784,7 @@ void Hook_Vector_Vector_Vector_Vector(Hook *hook, Vector *out, void *pthis, Vect
 	memcpy(out, &ret, sizeof(Vector));
 }
 
-const char *Hook_Str_Str(Hook *hook, void *pthis, const char* str)
+const char *DECLARE_HOOK(Hook_Str_Str, void *pthis, const char* str)
 {
 	ke::AString ret;
 	ke::AString origret;
@@ -2813,7 +2819,7 @@ const char *Hook_Str_Str(Hook *hook, void *pthis, const char* str)
 	return ret.chars();
 }
 
-void Hook_Void_Short(Hook *hook, void *pthis, short i1)
+void DECLARE_HOOK(Hook_Void_Short, void *pthis, short i1)
 {
 	PUSH_VOID()
 

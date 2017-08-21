@@ -15,7 +15,16 @@
 #define HOOK_H
 
 #include "forward.h"
+#ifdef USE_LIBFFCALL
+extern "C"
+{
+#include <trampoline.h>
+#include <sys/mman.h>
+}
+#else
 #include "Trampolines.h"
+#endif
+
 #include <amtl/am-vector.h>
 #include <amtl/am-string.h>
 
@@ -26,6 +35,12 @@
 
 class Hook
 {
+private:
+	int              trampSize;
+#ifdef USE_LIBFFCALL
+	Hook			**tramp_data;
+#endif
+	
 public:
 	ke::Vector<Forward *> pre;     // pre forwards
 	ke::Vector<Forward *> post;    // post forwards
@@ -35,9 +50,8 @@ public:
 	void            *target;  // target function being called (the hook)
 	int              exec;    // 1 when this hook is in execution
 	int              del;     // 1 if this hook should be destroyed after exec
-	void            *tramp;   // trampoline for this hook
 	char			*ent;     // ent name that's being hooked
-	int              trampSize;
+	void            *tramp;   // trampoline for this hook
 
 	Hook(void **vtable_, int entry_, void *target_, bool voidcall, bool retbuf, int paramcount, char *name) :
 		func(NULL), vtable(vtable_), entry(entry_), target(target_), exec(0), del(0), tramp(NULL), trampSize(0)
@@ -49,7 +63,14 @@ public:
 
 			// now install a trampoline
 			// (int thiscall, int voidcall, int paramcount, void *extraptr)
+#ifdef USE_LIBFFCALL
+			extern Hook *hook;
+			tramp_data = new Hook*;
+			*tramp_data = this;
+			tramp = (void*)alloc_trampoline((__TR_function)target, &hook, tramp_data );
+#else
 			tramp = CreateGenericTrampoline(true, voidcall, retbuf, paramcount, (void*)this, target, &trampSize);
+#endif
 
 			// Insert into vtable
 #if defined(_WIN32)
@@ -81,7 +102,10 @@ public:
 #endif
 
 		ivtable[entry]=(int *)func;
-#if defined(_WIN32)
+#if defined(USE_LIBFFCALL)
+		delete tramp_data;
+		free_trampoline( (__TR_function)tramp );
+#elif defined(_WIN32)
 		VirtualFree(tramp, 0, MEM_RELEASE);
 #elif defined(__linux__)
 		munmap(tramp, trampSize);
