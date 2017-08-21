@@ -560,9 +560,13 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 	memset(glinfo.szLastLights, 0x0, 128);
 	memcpy(glinfo.szLastLights, szLights, ke::Min(iLength, 127));
 
+#ifndef NO_DETOURS
 	LightStyleDetour->DisableDetour();
+#endif
 	LIGHT_STYLE(0, szLights);
+#ifndef NO_DETOURS
 	LightStyleDetour->EnableDetour();
+#endif
 
 	// These make it so that players/weaponmodels look like whatever the lighting is
 	// at. otherwise it would color players under the skybox to these values.

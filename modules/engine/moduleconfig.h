@@ -389,7 +389,9 @@
 // #define FN_ServerExecute_Post				ServerExecute_Post
 // #define FN_engClientCommand_Post				engClientCommand_Post
 // #define FN_ParticleEffect_Post				ParticleEffect_Post
-// #define FN_LightStyle_Post					LightStyle_Post
+#ifdef NO_DETOURS
+#define FN_LightStyle_Post					LightStyle_Post
+#endif
 // #define FN_DecalIndex_Post					DecalIndex_Post
 // #define FN_PointContents_Post				PointContents_Post
 // #define FN_MessageBegin_Post					MessageBegin_Post

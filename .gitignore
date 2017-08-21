@@ -84,3 +84,13 @@ Thumbs.db
 # AMXX plugin build related files
 plugins/compile.dat
 plugins/compiled/
+
+# Don't add undone Android.mk's
+Android.mk.undone
+
+# Don't add symlink
+android/jni/amxmodx
+
+# Ignore built libraries
+android/libs/
+android/obj/

@@ -16,6 +16,7 @@ APP_MODULES := \
 	android_support trampoline hashinglib utf8rewind mm_amxmodx \
 	amxx_cstrike \
 	amxx_csx \
-	amxx_hamsandwich
+	amxx_hamsandwich \
+	amxx_engine
 APP_PLATFORM := android-17
 # APP_STL := gnustl_static
