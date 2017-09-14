@@ -28,15 +28,6 @@ endif
 
 LOCAL_CPPFLAGS += -std=c++0x
 
-SRCPATH := $(APPLICATIONMK_PATH)/../../
-LOCAL_C_INCLUDES += \
-	$(SRCPATH)/public/ \
-	$(SRCPATH)/public/amtl/ \
-	$(SRCPATH)/public/amtl/amtl/ \
-	$(SRCPATH)/public/sdk/ \
-	$(SRCPATH)/public/memtools/ \
-	$(SRCPATH)/third_party/ \
-	$(SRCPATH)/third_party/hashing \
-	$(SRCPATH)/third_party/utf8rewind \
+SRCPATH := $(APPLICATIONMK_PATH)/metamod/
 
 LOCAL_C_ONLY_FLAGS += -std=c99

@@ -5,18 +5,32 @@ CFLAGS_OPT_X86 := -mtune=atom -march=atom -mssse3 -mfpmath=sse -funroll-loops -p
 CFLAGS_HARDFP := -D_NDK_MATH_NO_SOFTFP=1 -mhard-float -mfloat-abi=hard -DLOAD_HARDFP -DSOFTFP_LINK
 APPLICATIONMK_PATH = $(call my-dir)
 
-XASH3D_CONFIG := $(APPLICATIONMK_PATH)/bs_config.mk
+XASH3D_CONFIG := $(APPLICATIONMK_PATH)/amxx_config.mk
+MM_CONFIG := $(APPLICATIONMK_PATH)/mm_config.mk
 
 HLSDK := $(APPLICATIONMK_PATH)/../../hlsdk
-METAMOD := $(APPLICATIONMK_PATH)/../../metamod-hl1
-LIBFFCALL := $(APPLICATIONMK_PATH)/libffcall/libffcall-1.13/
+#METAMOD := $(APPLICATIONMK_PATH)/../../metamod-hl1/
+METAMOD := $(APPLICATIONMK_PATH)/metamod/
+LIBFFCALL := $(APPLICATIONMK_PATH)/libffcall/libffcall-1.13
 
 APP_ABI := armeabi-v7a-hard
-APP_MODULES := \
-	android_support trampoline hashinglib utf8rewind mm_amxmodx \
-	amxx_cstrike \
-	amxx_csx \
+APP_MODULES := pcre trampoline hashinglib utf8rewind android_support \
+	metamod \
+	mm_amxmodx \
+	amxx_sockets \
+	amxx_geoip \
 	amxx_hamsandwich \
-	amxx_engine
+	amxx_dodx amxx_dodfun \
+	amxx_fakemeta \
+	amxx_engine \
+	amxx_sqlite \
+	amxx_ns \
+	amxx_tfcx \
+	amxx_fun \
+	amxx_csx amxx_cstrike \
+	amxx_nvault \
+	amxx_regex \
+	amxx_tsx amxx_tsfun
+
 APP_PLATFORM := android-17
 # APP_STL := gnustl_static
