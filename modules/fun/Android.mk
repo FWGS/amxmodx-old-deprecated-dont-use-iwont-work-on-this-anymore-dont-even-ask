@@ -1,0 +1,25 @@
+# AMXXOnAndroid
+# Copyright (C) 2017 a1batross
+
+LOCAL_PATH := $(call my-dir)
+
+include $(CLEAR_VARS)
+
+include $(XASH3D_CONFIG)
+
+LOCAL_C_INCLUDES += \
+	$(HLSDK)/dlls \
+	$(HLSDK)/public \
+	$(HLSDK)/common \
+	$(HLSDK)/engine \
+	$(HLSDK)/pm_shared \
+	$(METAMOD)/metamod \
+
+LOCAL_MODULE := amxx_fun
+
+LOCAL_SRC_FILES := \
+	../../public/sdk/amxxmodule.cpp \
+	../../public/memtools/MemoryUtils.cpp \
+	fun.cpp
+
+include $(BUILD_SHARED_LIBRARY)

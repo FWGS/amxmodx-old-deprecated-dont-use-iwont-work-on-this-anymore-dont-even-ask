@@ -252,7 +252,6 @@ void LightStyle_Post( int style, const char *val )
 	if (!style && strcmp(val, glinfo.szRealLights)) {
 		memset(glinfo.szRealLights, 0x0, 128);
 		memcpy(glinfo.szRealLights, val, ke::Min(strlen(val), (size_t)127));
-		
 	}
 	
 	if (glinfo.bCheckLights && strcmp(val, glinfo.szLastLights))
