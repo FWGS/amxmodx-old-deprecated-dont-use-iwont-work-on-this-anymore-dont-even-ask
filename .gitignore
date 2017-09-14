@@ -94,3 +94,6 @@ android/jni/amxmodx
 # Ignore built libraries
 android/libs/
 android/obj/
+android/bin/
+android/gen/
+*.apk
