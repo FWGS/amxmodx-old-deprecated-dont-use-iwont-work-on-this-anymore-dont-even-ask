@@ -3996,7 +3996,7 @@ static cell AMX_NATIVE_CALL find_plugin_byfile(AMX *amx, cell *params)
 
 static cell AMX_NATIVE_CALL int3(AMX *amx, cell *params)
 {
-#if defined _DEBUG || defined DEBUG
+#if ( defined _DEBUG || defined DEBUG ) && !defined __arm__
 #if defined WIN32
 	__asm
 	{

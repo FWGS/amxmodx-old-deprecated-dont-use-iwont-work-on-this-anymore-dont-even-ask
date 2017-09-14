@@ -16,9 +16,17 @@
  * So we stick to getchar at the moment... (one needs to key ctrl-d to terminate input if getch is called with a controlling
  * terminal driven by a tty having -raw)
  */
+#ifndef getch
 #define getch           getchar
+#endif
+
+#ifndef stricmp
 #define	stricmp(a,b)    strcasecmp(a,b)
+#endif
+
+#ifndef strnicmp
 #define	strnicmp(a,b,c) strncasecmp(a,b,c)
+#endif
 
 #if ( defined(__linux__) || defined(__APPLE__) )  && !defined _snprintf 
 #define _snprintf snprintf

@@ -441,7 +441,7 @@ int CheckModules(AMX *amx, char error[128])
 				}
 			}
 		}
-
+		
 		if (!found)
 		{
 			if (expect == LibType_Library)
@@ -455,7 +455,7 @@ int CheckModules(AMX *amx, char error[128])
 				}
 			}
 		}
-
+		
 		if (!found)
 		{
 			const char *type = "Module/Library";
@@ -480,7 +480,14 @@ int CheckModules(AMX *amx, char error[128])
 		{
 			if (dec.cmd == LibCmd_ReqClass || dec.cmd == LibCmd_ReqLib)
 			{
-				if ( (err=RunLibCommand(&dec)) != LibErr_None )
+				err=RunLibCommand(&dec);
+				if( err != LibErr_None )
+				{
+					if( LoadModule(dec.param1, PT_ANYTIME, true, true) ) // HACKHACK!!!
+						err = LibErr_None;
+				}
+
+				if ( err != LibErr_None )
 				{
 					if (!pHandler->HandleModule(dec.param1, (err == LibErr_NoClass)))
 					{
@@ -825,13 +832,35 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 	char pathString[PLATFORM_MAX_PATH];
 	char path[PLATFORM_MAX_PATH];
 
+#ifdef __ANDROID__
+	char *libdir = getenv( "MM_GAMELIBDIR" );
+	
+	if( !libdir )
+	{
+		AMXXLOG_Log("[AMXX] MM_GAMELIBDIR is not set! You're trying to running me outside AMXXOnAndroid, huh?");
+		return false;
+	}
+	
+	ke::SafeSprintf(
+		pathString,
+		sizeof(pathString),
+		"%s/libamxx_%s.so",
+		libdir,
+		shortname);
+	
+	AMXXLOG_Log("[AMXX] Module path is %s", pathString);
+#else
 	build_pathname_r(
 		pathString,
 		sizeof(pathString),
 		"%s/%s",
 		get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"),
 		shortname);
+#endif
 
+#ifdef __ANDROID__
+	strncopy(path, pathString, sizeof(path));
+#else
 	if (simplify)
 	{
 		if (!ConvertModuleName(pathString, path))
@@ -839,12 +868,16 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 	} else {
 		strncopy(path, pathString, sizeof(path));
 	}
+#endif
 
 	if (noFileBail)
 	{
 		FILE *fp = fopen(path, "rb");
 		if (!fp)
+		{
+			AMXXLOG_Log( "Can't find module file: %s", path);
 			return false;
+		}
 		fclose(fp);
 	}
 

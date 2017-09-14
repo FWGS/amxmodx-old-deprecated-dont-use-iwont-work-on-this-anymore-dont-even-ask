@@ -82,17 +82,27 @@ LOCAL_SRC_FILES := \
 
 # TODO
 ifeq ($(TARGET_ARCH_ABI),x86)
-LOCAL_LDFLAGS += $(LOCAL_PATH)/JIT/amxexecn.o \
-	$(LOCAL_PATH)/JIT/amxjitsn.o \
-	$(LOCAL_PATH)/JIT/natives-x86.o \
-	$(LOCAL_PATH)/JIT/helpers-x86.o
-LOCAL_CFLAGS += -DJIT -DASM32
-else
-LOCAL_CFLAGS += -DUSE_LIBFFCALL
-LOCAL_STATIC_LIBRARIES += trampoline
+	LOCAL_LDFLAGS += $(LOCAL_PATH)/JIT/amxexecn.o \
+		$(LOCAL_PATH)/JIT/amxjitsn.o \
+		$(LOCAL_PATH)/JIT/natives-x86.o \
+		$(LOCAL_PATH)/JIT/helpers-x86.o
+	LOCAL_CFLAGS += -DJIT -DASM32
+endif
+#ifeq ($(TARGET_ARCH_ABI),armeabi-v7a-hard)
+#	LOCAL_SRC_FILES += amxexec_arm7_gas.s
+#	LOCAL_CFLAGS += -DASM32 -DUSE_LIBFFCALL
+#	LOCAL_STATIC_LIBRARIES += trampoline
+#endif
+#ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
+#	$(error armeabi-v7a is not supported. There is even no mods for it!)
+#endif
+ifeq ($(TARGET_ARCH_ABI),armeabi-v7a-hard)
+	LOCAL_CFLAGS += -DUSE_LIBFFCALL
+	LOCAL_STATIC_LIBRARIES += trampoline
 endif
 
-LOCAL_LDLIBS := -lz
+
+LOCAL_LDLIBS := -lz -llog
 LOCAL_STATIC_LIBRARIES += android_support hashinglib utf8rewind
 
 include $(BUILD_SHARED_LIBRARY)

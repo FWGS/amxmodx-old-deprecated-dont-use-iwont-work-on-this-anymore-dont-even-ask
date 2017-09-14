@@ -134,6 +134,7 @@ void CvarManager::CreateCvarHook(void)
 	{
 		void *functionAddress = nullptr;
 
+		m_HookDetour = 0;
 		if (CommonConfig && CommonConfig->GetMemSig("Cvar_DirectSet", &functionAddress) && functionAddress)
 		{
 			// Disabled by default.

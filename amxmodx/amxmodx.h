@@ -54,6 +54,12 @@
 #include <amxmodx_version.h>
 #include <HLTypeConversion.h>
 
+#ifdef __ANDROID__
+#include <android/log.h>
+#define android_print( x ) __android_log_print( ANDROID_LOG_INFO, "AMXXOnAndroid", (x))
+#define android_printf( x, ... ) __android_log_print( ANDROID_LOG_INFO, "AMXXOnAndroid", (x), __VA_ARGS__)
+#endif
+
 #define AMXXLOG_Log g_log.Log
 #define AMXXLOG_Error g_log.LogError
 

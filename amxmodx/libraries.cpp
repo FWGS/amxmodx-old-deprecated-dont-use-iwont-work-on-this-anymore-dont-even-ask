@@ -210,7 +210,9 @@ LibError RunLibCommand(const LibDecoder *enc)
 				return LibErr_None;
 		}
 		if (expect == LibType_Library)
+		{
 			return LibErr_NoLibrary;
+		}
 		else if (expect == LibType_Class)
 			return LibErr_NoClass;
 
