@@ -96,6 +96,13 @@ inline void FreePageMemory(void *addr, size_t size)
 #endif
 }
 
+inline void FlushCache(void *addr, int length)
+{
+#ifdef __arm__
+	__builtin___clear_cache((char*)ALIGN(addr), (char*)(ALIGN(addr) + PAGE_SIZE));
+#endif
+}
+
 inline void SetMemPatchable(void *address, size_t size)
 {
 	ProtectMemory(address, (int)size, PAGE_EXECUTE_READWRITE);
@@ -105,9 +112,30 @@ inline void DoGatePatch(unsigned char *target, void *callback)
 {
 	SetMemPatchable(target, 20);
 
+#ifdef __arm__
+	if( ((unsigned long)target & 3) == 0 )
+	{
+        // ldr pc, [pc, #0]; .long addr; .long addr
+        memcpy(target, "\x00\xf0\x9f\xe5\x00\x00\x00\x00\x00\x00\x00\x00", 12);
+        *(unsigned long *)&target[4] = (unsigned long)callback;
+        *(unsigned long *)&target[8] = (unsigned long)callback;
+    }
+    else // Thumb
+    {
+		target--;
+		
+        // add r0, pc, #4; ldr r0, [r0, #0]; mov pc, r0; mov pc, r0; .long addr
+        memcpy(target, "\x01\xa0\x00\x68\x87\x46\x87\x46\x00\x00\x00\x00", 12);
+        *(unsigned long *)&target[8] = (unsigned long)callback;
+    }
+    
+    // clear instruction caches
+	FlushCache( target, 20 );
+#else
 	target[0] = 0xFF;	/* JMP */
 	target[1] = 0x25;	/* MEM32 */
 	*(void **)(&target[2]) = callback;
+#endif
 }
 
 inline void ApplyPatch(void *address, int offset, const patch_t *patch, patch_t *restore)
@@ -128,6 +156,7 @@ inline void ApplyPatch(void *address, int offset, const patch_t *patch, patch_t 
 	{
 		addr[i] = patch->patch[i];
 	}
+	FlushCache( address, 20 );
 }
 
 #endif //_INCLUDE_SOURCEMOD_DETOURHELPERS_H_

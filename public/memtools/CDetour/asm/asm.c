@@ -21,6 +21,7 @@
 * @param pc		The program counter value that needs to be set (usually the next address from the source).
 * @noreturn
 */
+#ifndef __arm__
 void check_thunks(unsigned char *dest, unsigned char *pc)
 {
 #if defined WIN32
@@ -83,11 +84,21 @@ void check_thunks(unsigned char *dest, unsigned char *pc)
 	return;
 #endif
 }
+#endif
 
 //if dest is NULL, returns minimum number of bytes needed to be copied
 //if dest is not NULL, it will copy the bytes to dest as well as fix CALLs and JMPs
 //http://www.devmaster.net/forums/showthread.php?t=2311
 int copy_bytes(unsigned char *func, unsigned char* dest, int required_len) {
+#ifdef __arm__
+#define HIJACK_SIZE 12
+	if( dest )
+	{
+		memcpy( dest, func, HIJACK_SIZE );
+	}
+	
+	return HIJACK_SIZE;
+#else
 	int bytecount = 0;
 
 	while(bytecount < required_len && *func != 0xCC)
@@ -334,8 +345,10 @@ int copy_bytes(unsigned char *func, unsigned char* dest, int required_len) {
 	}
 
 	return bytecount;
+#endif
 }
 
+#ifndef __arm__
 //insert a specific JMP instruction at the given location
 void inject_jmp(void* src, void* dest) {
 	*(unsigned char*)src = OP_JMP;
@@ -382,6 +395,7 @@ void* eval_jump(void* src) {
 
 	return addr;
 }
+#endif
 /*
 from ms detours package
 static bool detour_is_imported(PBYTE pbCode, PBYTE pbAddress)

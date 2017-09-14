@@ -1,6 +1,10 @@
 #ifndef __ASM_H__
 #define __ASM_H__
 
+#ifdef __arm__
+#define HIJACK_SIZE 12
+#define OP_JMP_SIZE 12
+#else
 #define OP_JMP				0xE9
 #define OP_JMP_SIZE			5
 
@@ -12,6 +16,7 @@
 
 #define OP_JMP_BYTE			0xEB
 #define OP_JMP_BYTE_SIZE	2
+#endif
 
 #ifdef __cplusplus
 extern "C" {

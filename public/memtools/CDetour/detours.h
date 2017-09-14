@@ -267,7 +267,7 @@ public:
 
 
 // Helpers from jit_helpers.h/x86_macros.h.
-
+#ifndef __arm__
 class JitWriter
 {
 public:
@@ -372,6 +372,6 @@ inline void IA32_Write_Jump32_Abs(JitWriter *jit, unsigned int jmp, void *target
 	//restore old ptr
 	jit->outptr = oldptr;
 }
-
+#endif
 
 #endif // _INCLUDE_SOURCEMOD_DETOURS_H_

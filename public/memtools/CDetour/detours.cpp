@@ -139,7 +139,6 @@ bool CDetour::CreateDetour()
 		g_pSM->LogError(myself, "Could not locate %s - Disabling detour", signame);
 		return false;
 	}*/
-
 	if (address != NULL)
 	{
 		detour_address = address;
@@ -158,6 +157,7 @@ bool CDetour::CreateDetour()
 	{
 		detour_restore.patch[i] = ((unsigned char *)detour_address)[i];
 	}
+#ifndef __arm__
 
 	JitWriter wr;
 	JitWriter *jit = &wr;
@@ -193,7 +193,7 @@ jit_rewind:
 	//spengine->SetReadExecute(wr.outbase);
 
 	*trampoline = detour_trampoline;
-
+#endif
 	return true;
 }
 
