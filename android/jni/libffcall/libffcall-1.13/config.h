@@ -3,145 +3,145 @@
 
 /* CPU and C ABI indicator */
 #ifndef __i386__
-/* #undef __i386__ */
+#undef __i386__
 #endif
 #ifndef __x86_64_x32__
-/* #undef __x86_64_x32__ */
+#undef __x86_64_x32__
 #endif
 #ifndef __x86_64__
-/* #undef __x86_64__ */
+#undef __x86_64__
 #endif
 #ifndef __alpha__
-/* #undef __alpha__ */
+#undef __alpha__
 #endif
 #ifndef __arm__
-/* #define __arm__ 1*/
+#define __arm__ 1
 #endif
 #ifndef __armhf__
-/* #undef __armhf__ */
+#undef __armhf__
 #endif
 #ifndef __arm64_ilp32__
-/* #undef __arm64_ilp32__ */
+#undef __arm64_ilp32__
 #endif
 #ifndef __arm64__
-/* #undef __arm64__ */
+#undef __arm64__
 #endif
 #ifndef __hppa__
-/* #undef __hppa__ */
+#undef __hppa__
 #endif
 #ifndef __hppa64__
-/* #undef __hppa64__ */
+#undef __hppa64__
 #endif
 #ifndef __ia64__
-/* #undef __ia64__ */
+#undef __ia64__
 #endif
 #ifndef __m68k__
-/* #undef __m68k__ */
+#undef __m68k__
 #endif
 #ifndef __mips__
-/* #undef __mips__ */
+#undef __mips__
 #endif
 #ifndef __mipsn32__
-/* #undef __mipsn32__ */
+#undef __mipsn32__
 #endif
 #ifndef __mips64__
-/* #undef __mips64__ */
+#undef __mips64__
 #endif
 #ifndef __powerpc__
-/* #undef __powerpc__ */
+#undef __powerpc__
 #endif
 #ifndef __powerpc64__
-/* #undef __powerpc64__ */
+#undef __powerpc64__
 #endif
 #ifndef __powerpc64_elfv2__
-/* #undef __powerpc64_elfv2__ */
+#undef __powerpc64_elfv2__
 #endif
 #ifndef __s390__
-/* #undef __s390__ */
+#undef __s390__
 #endif
 #ifndef __s390x__
-/* #undef __s390x__ */
+#undef __s390x__
 #endif
 #ifndef __sh__
-/* #undef __sh__ */
+#undef __sh__
 #endif
 #ifndef __sparc__
-/* #undef __sparc__ */
+#undef __sparc__
 #endif
 #ifndef __sparc64__
-/* #undef __sparc64__ */
+#undef __sparc64__
 #endif
 
 
 /* CPU and C ABI indicator */
 #ifndef __i386__
-/* #undef __i386__ */
+#undef __i386__
 #endif
 #ifndef __x86_64_x32__
-/* #undef __x86_64_x32__ */
+#undef __x86_64_x32__
 #endif
 #ifndef __x86_64__
-/* #undef __x86_64__ */
+#undef __x86_64__
 #endif
 #ifndef __alpha__
-/* #undef __alpha__ */
+#undef __alpha__
 #endif
 #ifndef __arm__
-/* #define __arm__ 1*/
+#define __arm__ 1
 #endif
 #ifndef __armhf__
-/* #undef __armhf__ */
+#undef __armhf__
 #endif
 #ifndef __arm64_ilp32__
-/* #undef __arm64_ilp32__ */
+#undef __arm64_ilp32__
 #endif
 #ifndef __arm64__
-/* #undef __arm64__ */
+#undef __arm64__
 #endif
 #ifndef __hppa__
-/* #undef __hppa__ */
+#undef __hppa__
 #endif
 #ifndef __hppa64__
-/* #undef __hppa64__ */
+#undef __hppa64__
 #endif
 #ifndef __ia64__
-/* #undef __ia64__ */
+#undef __ia64__
 #endif
 #ifndef __m68k__
-/* #undef __m68k__ */
+#undef __m68k__
 #endif
 #ifndef __mips__
-/* #undef __mips__ */
+#undef __mips__
 #endif
 #ifndef __mipsn32__
-/* #undef __mipsn32__ */
+#undef __mipsn32__
 #endif
 #ifndef __mips64__
-/* #undef __mips64__ */
+#undef __mips64__
 #endif
 #ifndef __powerpc__
-/* #undef __powerpc__ */
+#undef __powerpc__
 #endif
 #ifndef __powerpc64__
-/* #undef __powerpc64__ */
+#undef __powerpc64__
 #endif
 #ifndef __powerpc64_elfv2__
-/* #undef __powerpc64_elfv2__ */
+#undef __powerpc64_elfv2__
 #endif
 #ifndef __s390__
-/* #undef __s390__ */
+#undef __s390__
 #endif
 #ifndef __s390x__
-/* #undef __s390x__ */
+#undef __s390x__
 #endif
 #ifndef __sh__
-/* #undef __sh__ */
+#undef __sh__
 #endif
 #ifndef __sparc__
-/* #undef __sparc__ */
+#undef __sparc__
 #endif
 #ifndef __sparc64__
-/* #undef __sparc64__ */
+#undef __sparc64__
 #endif
 
 
@@ -149,7 +149,7 @@
 /* #undef ASM_UNDERSCORE */
 
 /* whether code in malloc()ed memory is executable */
-#define CODE_EXECUTABLE /**/
+#undef CODE_EXECUTABLE /**/
 
 /* Define to a C preprocessor expression that evaluates to 1 or 0, depending
    whether the gnulib module lock shall be considered present. */
@@ -181,6 +181,7 @@
 
 /* <sys/mman.h> defines MAP_ANONYMOUS and mmaping with MAP_ANONYMOUS works */
 /* #undef HAVE_MMAP_ANONYMOUS */
+#define HAVE_MMAP_ANONYMOUS
 
 /* mmaping of the special device /dev/zero works */
 /* #undef HAVE_MMAP_DEVZERO */
