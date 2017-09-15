@@ -75,15 +75,17 @@ void CModule::clear(bool clearFilename)
 
 bool CModule::attachMetamod(const char *mmfile, PLUG_LOADTIME now)
 {
-	void **handle;
-	void *dummy = NULL;
+	void *ptr = NULL;
 
-	if (!m_Handle)
-		handle = &dummy;
-	else
-		handle = (void **)&m_Handle;
+	if( m_Handle )
+		ptr = m_Handle;
 
-	int res = LoadMetamodPlugin(mmfile, handle, now);
+	int res = LoadMetamodPlugin(mmfile, &ptr, now);
+
+	if( m_Handle && !ptr )
+	{
+		AMXXLOG_Error( "[AMXX] AMXX Module claims it's a metamod plugin, but it's not: %s", mmfile );
+	}
 
 	if (!res)
 	{
@@ -144,7 +146,10 @@ bool CModule::attachModule()
 {
 	// old & new
 	if (m_Status != MODULE_QUERY || !m_Handle)
+	{
+		AMXXLOG_Log("[AMXX] Can't attach: %s %i %p...\n", m_Filename.chars(), m_Status, m_Handle );
 		return false;
+	}
 
 	if (m_Amxx)
 	{
@@ -152,7 +157,10 @@ bool CModule::attachModule()
 		ATTACHMOD_NEW AttachFunc_New = (ATTACHMOD_NEW)DLPROC(m_Handle, "AMXX_Attach");
 
 		if (!AttachFunc_New)
+		{
+			AMXXLOG_Log("[AMXX] Can't resolve AMXX_Attach function for %s\n", m_Filename.chars());
 			return false;
+		}
 		
 		g_ModuleCallReason = ModuleCall_Attach;
 		g_CurrentlyCalledModule = this;

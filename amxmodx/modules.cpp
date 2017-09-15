@@ -461,7 +461,7 @@ int CheckModules(AMX *amx, char error[128])
 			const char *type = "Module/Library";
 			if (expect == LibType_Class)
 				type = "Module/Library Class";
-			sprintf(error, "%s \"%s\" required for plugin. Check modules.ini.", type, buffer);
+			sprintf(error, "%s \"%s\" required for plugin. Check modules.ini. (old)", type, buffer);
 			return 0;
 		}
 	}
@@ -481,11 +481,11 @@ int CheckModules(AMX *amx, char error[128])
 			if (dec.cmd == LibCmd_ReqClass || dec.cmd == LibCmd_ReqLib)
 			{
 				err=RunLibCommand(&dec);
-				if( err != LibErr_None )
+				/*if( err != LibErr_None )
 				{
 					if( LoadModule(dec.param1, PT_ANYTIME, true, true) ) // HACKHACK!!!
 						err = LibErr_None;
-				}
+				}*/
 
 				if ( err != LibErr_None )
 				{
@@ -494,7 +494,7 @@ int CheckModules(AMX *amx, char error[128])
 						const char *type = "Module/Library";
 						if (err == LibErr_NoClass)
 							type = "Module/Library Class";
-						sprintf(error, "%s \"%s\" required for plugin.  Check modules.ini.", type, dec.param1);
+						sprintf(error, "%s \"%s\" required for plugin.  Check modules.ini. (new", type, dec.param1);
 						return 0;
 					}
 				}
@@ -938,16 +938,19 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 
 	if (error)
 	{
+		AMXXLOG_Log( "An error occured, see below\n" );
 		return false;
 	}
 
 	if (module->IsMetamod())
 	{
+#ifndef __ANDROID__
 		char *mmpathname = build_pathname_addons(
 							"%s/%s",
 							get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"),
 							shortname);
 		ConvertModuleName(mmpathname, path);
+#endif
 		module->attachMetamod(path, now);
 	}
 
