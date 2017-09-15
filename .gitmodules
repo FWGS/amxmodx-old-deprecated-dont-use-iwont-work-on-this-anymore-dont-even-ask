@@ -1,3 +1,6 @@
 [submodule "public/amtl"]
 	path = public/amtl
 	url = https://github.com/alliedmodders/amtl
+[submodule "android/jni/filesystem_stdio_xash"]
+	path = android/jni/filesystem_stdio_xash
+	url = https://github.com/FWGS/filesystem_stdio_xash
