@@ -19,7 +19,13 @@ bool GET_IFACE(const char* library, T*& var, const char* version, bool add_ext =
 	char file[PLATFORM_MAX_PATH];
 
 	if (add_ext)
+	{
+#ifdef __ANDROID__
+		ke::path::Format(file, sizeof(file), "%s/lib%s.so", getenv( "MM_GAMELIBDIR" ), library);
+#else
 		ke::path::Format(file, sizeof(file), "%s.%s", library, PLATFORM_LIB_EXT);
+#endif
+	}
 	else
 		ke::SafeStrcpy(file, sizeof(file), library);
 
