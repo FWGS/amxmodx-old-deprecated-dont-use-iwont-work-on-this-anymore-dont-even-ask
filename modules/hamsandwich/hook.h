@@ -30,16 +30,19 @@ extern "C"
 
 #define ALIGN(ar) ((intptr_t)ar & ~(sysconf(_SC_PAGESIZE)-1))
 
+#ifdef USE_LIBFFCALL
+class Hook;
+extern Hook *hook;
+#endif
+
 // This is just a simple container for data so I only have to add 1 extra 
 // parameter to calls that get trampolined
+static void TestTrampoline();
 
 class Hook
 {
 private:
 	int              trampSize;
-#ifdef USE_LIBFFCALL
-	Hook			**tramp_data;
-#endif
 	
 public:
 	ke::Vector<Forward *> pre;     // pre forwards
@@ -52,9 +55,10 @@ public:
 	int              del;     // 1 if this hook should be destroyed after exec
 	char			*ent;     // ent name that's being hooked
 	void            *tramp;   // trampoline for this hook
+	const char		*methodname;
 
-	Hook(void **vtable_, int entry_, void *target_, bool voidcall, bool retbuf, int paramcount, char *name) :
-		func(NULL), vtable(vtable_), entry(entry_), target(target_), exec(0), del(0), tramp(NULL), trampSize(0)
+	Hook(void **vtable_, int entry_, void *target_, bool voidcall, bool retbuf, int paramcount, char *name, const char *methodname) :
+		func(NULL), vtable(vtable_), entry(entry_), target(target_), exec(0), del(0), tramp(NULL), trampSize(0), methodname(methodname)
 		{
 			// original function is vtable[entry]
 			// to not make the compiler whine, cast vtable to int **
@@ -63,11 +67,9 @@ public:
 
 			// now install a trampoline
 			// (int thiscall, int voidcall, int paramcount, void *extraptr)
+
 #ifdef USE_LIBFFCALL
-			extern Hook *hook;
-			tramp_data = new Hook*;
-			*tramp_data = this;
-			tramp = (void*)alloc_trampoline((__TR_function)target, &hook, tramp_data );
+			tramp = (void*)alloc_trampoline((__TR_function)target, &hook, this );
 #else
 			tramp = CreateGenericTrampoline(true, voidcall, retbuf, paramcount, (void*)this, target, &trampSize);
 #endif
@@ -78,7 +80,7 @@ public:
 			VirtualProtect(&ivtable[entry],sizeof(int*),PAGE_READWRITE,&OldFlags);
 #elif defined(__linux__) || defined(__APPLE__)
 			void *addr = (void *)ALIGN(&ivtable[entry]);
-			mprotect(addr,sysconf(_SC_PAGESIZE),PROT_READ|PROT_WRITE);
+			mprotect(addr,sysconf(_SC_PAGESIZE),PROT_READ|PROT_WRITE|PROT_EXEC);
 #endif
 			ivtable[entry]=(int*)tramp;
 
@@ -98,12 +100,11 @@ public:
 		VirtualProtect(&ivtable[entry],sizeof(int*),PAGE_READWRITE,&OldFlags);
 #elif defined(__linux__) || defined(__APPLE__)
 		void *addr = (void *)ALIGN(&ivtable[entry]);
-		mprotect(addr,sysconf(_SC_PAGESIZE),PROT_READ|PROT_WRITE);
+		mprotect(addr,sysconf(_SC_PAGESIZE),PROT_READ|PROT_WRITE|PROT_EXEC);
 #endif
 
 		ivtable[entry]=(int *)func;
 #if defined(USE_LIBFFCALL)
-		delete tramp_data;
 		free_trampoline( (__TR_function)tramp );
 #elif defined(_WIN32)
 		VirtualFree(tramp, 0, MEM_RELEASE);
@@ -129,5 +130,10 @@ public:
 		post.clear();
 	}
 };
+
+static void TestTrampoline()
+{
+	MF_Log( "Called trampoline %p:%s", hook, hook->methodname);
+}
 
 #endif

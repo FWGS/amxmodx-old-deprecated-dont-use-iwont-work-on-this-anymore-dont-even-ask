@@ -111,7 +111,7 @@ void CHamSpecialBotHandler::RegisterChecked(AMX *amx, int &func, const char *fun
 	char classname[] = "player";
 
 	// If we got here, the function is not hooked
-	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname);
+	Hook *hook = new Hook(vtable, hooklist[func].vtid, hooklist[func].targetfunc, hooklist[func].isvoid, hooklist[func].needsretbuf, hooklist[func].paramcount, classname, hooklist[func].name);
 	hooks[func].append(hook);
 
 	if (post)

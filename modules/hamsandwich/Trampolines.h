@@ -43,6 +43,8 @@
 
 #include <amtl/am-bits.h>
 
+#ifndef USE_LIBFFCALL
+
 namespace Trampolines
 {
 
@@ -631,5 +633,6 @@ inline void *CreateGenericTrampoline(bool thiscall, bool voidcall, bool retbuf, 
 	return tramp.Finish(size);
 };
 
+#endif // USE_LIBFFCALL
 
 #endif // TRAMPOLINEMANAGER_H
