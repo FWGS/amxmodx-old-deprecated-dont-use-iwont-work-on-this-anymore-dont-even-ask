@@ -1,4 +1,4 @@
-CFLAGS_OPT :=  -O3 -fomit-frame-pointer -funsafe-math-optimizations -ftree-vectorize -fgraphite-identity -floop-interchange -floop-block -funsafe-loop-optimizations -finline-limit=1024 -fno-exceptions -fno-rtti -Dstricmp=strcasecmp -D_snprintf=snprintf
+CFLAGS_OPT :=  -O3 -fomit-frame-pointer -funsafe-math-optimizations -ftree-vectorize -fgraphite-identity -floop-interchange -floop-block -funsafe-loop-optimizations -finline-limit=1024 -fno-exceptions -fno-rtti -Dstricmp=strcasecmp -D_snprintf=snprintf -Wno-attributes
 CFLAGS_OPT_ARM := -mthumb -mfpu=neon -mcpu=cortex-a9 -pipe -mvectorize-with-neon-quad -DVECTORIZE_SINCOS
 CFLAGS_OPT_ARMv5 :=-march=armv6 -mfpu=vfp -marm -pipe
 CFLAGS_OPT_X86 := -mtune=atom -march=atom -mssse3 -mfpmath=sse -funroll-loops -pipe -DVECTORIZE_SINCOS
@@ -20,17 +20,14 @@ APP_MODULES := pcre trampoline hashinglib utf8rewind android_support \
 	amxx_sockets \
 	amxx_geoip \
 	amxx_hamsandwich \
-	amxx_dodx amxx_dodfun \
 	amxx_fakemeta \
 	amxx_engine \
 	amxx_sqlite \
-	amxx_ns \
-	amxx_tfcx \
 	amxx_fun \
 	amxx_csx amxx_cstrike \
 	amxx_nvault \
-	amxx_regex \
-	amxx_tsx amxx_tsfun
+	amxx_regex
+#	amxx_tsx amxx_tsfun amx_dodx amx_dodfun amx_tfcx amx_ns
 
 APP_PLATFORM := android-17
 # APP_STL := gnustl_static
