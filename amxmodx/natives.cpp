@@ -505,9 +505,7 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 #ifndef USE_LIBFFCALL
 	amxx_DynaMake(pNative->pfn, id);
 #else
-	pNative->data = new int;
-	(*pNative->data) = id;
-	pNative->pfn = (char *) alloc_trampoline( (__TR_function)amxx_DynaFunc, (void*)g_Id, pNative->data ); //!! CASTING INT TO PTR
+	pNative->pfn = (char *) alloc_trampoline( (__TR_function)amxx_DynaFunc, &g_Id, (void*)id ); //!! CASTING INT TO PTR
 #endif
 	pNative->func = idx;
 	pNative->style = params[3];
@@ -525,7 +523,6 @@ void ClearPluginLibraries()
 	for (size_t i=0; i<g_RegNatives.length(); i++)
 	{
 #ifdef USE_LIBFFCALL
-		delete g_RegNatives[i]->data;
 		free_trampoline( (__TR_function)g_RegNatives[i]->pfn );
 #elif defined( _linux__ )
 		munmap(g_RegNatives[i]->pfn, amxx_DynaCodesize() + 10);
