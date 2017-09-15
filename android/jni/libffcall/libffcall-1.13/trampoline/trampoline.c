@@ -1449,7 +1449,7 @@ __TR_function alloc_trampoline (__TR_function address, void* variable, void* dat
      See gcc/libgcc/config/aarch64/sync-cache.c. */
 #if defined(__GNUC__)
   /* Use the GCC built-in. */
-  __clear_cache((void*)function_x,(void*)(function_x+TRAMP_CODE_LENGTH));
+  __builtin___clear_cache((void*)function_x,(void*)(function_x+PAGE_SIZE));
 #else
   #error "Don't know how to implement clear_cache on this platform."
 #endif
