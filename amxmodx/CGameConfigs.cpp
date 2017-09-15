@@ -585,10 +585,12 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 #endif
 				}
 
+#ifndef __ANDROID__
 				if (!finalAddress)
 				{
 					finalAddress = g_MemUtils.DecodeAndFindPattern(addressInBase, TempSig.signature);
 				}
+#endif
 
 				m_Sigs.replace(m_Offset, finalAddress);
 			}
@@ -850,7 +852,12 @@ CGameConfig::AddressConf::AddressConf(const char *sigName, size_t sigLength, siz
 
 bool CGameConfig::GetMemSig(const char *key, void **addr)
 {
+#ifdef __ANDROID__
+	if( addr ) *addr = 0;
+	return false;
+#else
 	return m_Sigs.retrieve(key, addr);
+#endif
 }
 
 
