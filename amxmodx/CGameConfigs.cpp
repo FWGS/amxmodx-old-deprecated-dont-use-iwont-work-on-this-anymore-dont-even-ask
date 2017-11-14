@@ -585,7 +585,7 @@ SMCResult CGameConfig::ReadSMC_LeavingSection(const SMCStates *states)
 #endif
 				}
 
-#ifndef __ANDROID__
+#if !((defined(PLATFORM_LINUX) && defined(__arm__)) || defined(__ANDROID__))
 				if (!finalAddress)
 				{
 					finalAddress = g_MemUtils.DecodeAndFindPattern(addressInBase, TempSig.signature);
@@ -852,7 +852,7 @@ CGameConfig::AddressConf::AddressConf(const char *sigName, size_t sigLength, siz
 
 bool CGameConfig::GetMemSig(const char *key, void **addr)
 {
-#ifdef __ANDROID__
+#if (defined(PLATFORM_LINUX) && defined(__arm__)) || defined(__ANDROID__)
 	if( addr ) *addr = 0;
 	return false;
 #else

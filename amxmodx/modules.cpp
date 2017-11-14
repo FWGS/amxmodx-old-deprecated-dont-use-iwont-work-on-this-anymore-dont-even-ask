@@ -853,12 +853,16 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 	build_pathname_r(
 		pathString,
 		sizeof(pathString),
+#if !defined(__arm__) && !defined(PLATFORM_LINUX)
 		"%s/%s",
+#else
+		"%s/libamxx_%s.so",
+#endif
 		get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"),
 		shortname);
 #endif
 
-#ifdef __ANDROID__
+#if (defined(PLATFORM_LINUX) && defined(__arm__)) || defined(__ANDROID__)
 	strncopy(path, pathString, sizeof(path));
 #else
 	if (simplify)
@@ -944,7 +948,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 
 	if (module->IsMetamod())
 	{
-#ifndef __ANDROID__
+#if !((defined(PLATFORM_LINUX) && defined(__arm__)) || defined(__ANDROID__))
 		char *mmpathname = build_pathname_addons(
 							"%s/%s",
 							get_localinfo("amxx_modulesdir", "addons/amxmodx/modules"),
