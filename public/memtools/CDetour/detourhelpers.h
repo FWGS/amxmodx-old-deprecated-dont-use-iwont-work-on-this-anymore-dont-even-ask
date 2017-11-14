@@ -36,12 +36,13 @@
 	#include <sys/mman.h>
 	#include <unistd.h>
 	#include <stdlib.h>
+	#include <string.h>
 	#ifndef PAGE_SIZE
 		#define	PAGE_SIZE	4096
 	#endif
 	#define ALIGN(ar) ((long)ar & ~(PAGE_SIZE-1))
 	#define	PAGE_EXECUTE_READWRITE	PROT_READ|PROT_WRITE|PROT_EXEC
-	#if defined(__linux)
+	#if defined(__linux__)
 		#include <malloc.h>
 	#endif
 #elif defined(WIN32)
