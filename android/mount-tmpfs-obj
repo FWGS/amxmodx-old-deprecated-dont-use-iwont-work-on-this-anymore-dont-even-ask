@@ -1,0 +1,4 @@
+#!/bin/bash
+
+mkdir -p obj/
+sudo mount tmpfs obj/ -o rw -t tmpfs

@@ -3,7 +3,7 @@
 
 /* CPU and C ABI indicator */
 #ifndef __i386__
-#undef __i386__
+// #undef __i386__
 #endif
 #ifndef __x86_64_x32__
 #undef __x86_64_x32__
@@ -15,7 +15,7 @@
 #undef __alpha__
 #endif
 #ifndef __arm__
-#define __arm__ 1
+// #define __arm__ 1
 #endif
 #ifndef __armhf__
 #undef __armhf__
@@ -87,7 +87,7 @@
 #undef __alpha__
 #endif
 #ifndef __arm__
-#define __arm__ 1
+// #define __arm__ 1
 #endif
 #ifndef __armhf__
 #undef __armhf__
