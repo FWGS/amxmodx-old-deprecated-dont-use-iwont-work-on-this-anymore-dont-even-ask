@@ -75,17 +75,15 @@ void CModule::clear(bool clearFilename)
 
 bool CModule::attachMetamod(const char *mmfile, PLUG_LOADTIME now)
 {
-	void *ptr = NULL;
+	void **handle;
+	void *dummy = NULL;
 
-	if( m_Handle )
-		ptr = m_Handle;
+	if (!m_Handle)
+		handle = &dummy;
+	else
+		handle = (void **)&m_Handle;
 
-	int res = LoadMetamodPlugin(mmfile, &ptr, now);
-
-	if( m_Handle && !ptr )
-	{
-		AMXXLOG_Error( "[AMXX] AMXX Module claims it's a metamod plugin, but it's not: %s", mmfile );
-	}
+	int res = LoadMetamodPlugin(mmfile, handle, now);
 
 	if (!res)
 	{
