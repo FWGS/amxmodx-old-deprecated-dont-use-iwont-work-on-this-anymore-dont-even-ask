@@ -31,7 +31,7 @@ struct regnative
 	int func;
 	int style;
 #ifdef USE_LIBFFCALL
-	int *data;
+	int id;
 #endif
 };
 

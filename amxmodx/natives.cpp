@@ -36,7 +36,7 @@ bool g_Initialized = false;
 extern "C" {
 #include <trampoline.h>
 }
-int *g_Id;
+int g_Id;
 void *GLOBAL_GATE;
 
 typedef int (*amxx_DynaFunc_t)(AMX *amx, cell *params);
@@ -52,7 +52,7 @@ extern "C" int amxx_DynaFunc(AMX *amx, cell *params)
 	
 	callback_t callback = (callback_t)GLOBAL_GATE;
 	
-    return callback( *g_Id, amx, params);
+	return callback( g_Id, amx, params);
 }
 #endif // USE_LIBFFCALL
 
@@ -505,14 +505,14 @@ static cell AMX_NATIVE_CALL register_native(AMX *amx, cell *params)
 #ifndef USE_LIBFFCALL
 	amxx_DynaMake(pNative->pfn, id);
 #else
-	pNative->pfn = (char *) alloc_trampoline( (__TR_function)amxx_DynaFunc, &g_Id, (void*)id ); //!! CASTING INT TO PTR
+	pNative->id = id;
+	pNative->pfn = (char *) alloc_trampoline( (__TR_function)amxx_DynaFunc, &g_Id, (void*)pNative->id ); //!! CASTING INT TO PTR
 #endif
 	pNative->func = idx;
 	pNative->style = params[3];
+	pNative->name = name;
 
 	g_RegNatives.append(pNative);
-
-	pNative->name = name;
 
 	return 1;
 }
