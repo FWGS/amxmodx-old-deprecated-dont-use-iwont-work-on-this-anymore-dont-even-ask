@@ -32,7 +32,7 @@
 # define dlclose(x)		FreeLibrary(x)
 #endif
 
-#include "zlib/zlib.h"
+#include "zlib.h"
 #include "Binary.h"
 
 typedef int	(*COMPILER)(int argc, char **argv);
