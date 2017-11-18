@@ -37,7 +37,8 @@ if(NOT XASH_64BIT AND CMAKE_SIZEOF_VOID_P EQUAL 8)
 	message(FATAL_ERROR "Xash3D doesn't work with 64 bit systems well and there is almost no games compiled for 64-bit. Please, set CMake to build for 32 system. If you still want 64bit build, pass -DXASH_64BIT=1 to CMake")
 endif()
 
-
+add_subdirectory( compiler/libpc300)
+add_subdirectory( compiler/amxxpc)
 add_subdirectory( amxmodx )
 add_subdirectory( modules )
 add_subdirectory( third_party )

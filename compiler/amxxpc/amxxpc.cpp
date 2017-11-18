@@ -33,7 +33,7 @@ bool CompressPl(abl *pl);
 void Pl2Bh(abl *pl, BinPlugin *bh);
 void WriteBh(BinaryWriter *bw, BinPlugin *bh);
 
-#if defined(EMSCRIPTEN)
+#if defined(EMSCRIPTEN) || defined(__ANDROID__)
 extern "C" void Compile32(int argc, char **argv);
 extern "C" int pc_printf(const char *message,...);
 #else
@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 {
 	struct abl pl32;
 
-#if defined(EMSCRIPTEN)
+#if defined(EMSCRIPTEN) || defined(__ANDROID__)
         COMPILER sc32 = (COMPILER)Compile32;
 #else
 # if defined(__linux__)
@@ -70,7 +70,7 @@ int main(int argc, char **argv)
 
 	COMPILER sc32 = (COMPILER)dlsym(lib, "Compile32");
 	pc_printf = (PRINTF)dlsym(lib, "pc_printf");
-#endif //EMSCRIPTEN
+#endif //EMSCRIPTEN || defined(__ANDROID__)
 
 	if (!sc32 || !pc_printf)
 	{
@@ -176,7 +176,7 @@ int main(int argc, char **argv)
 		fclose(fp);
 		unlink(file);
 		pc_printf("Error, failed to write binary\n");
-#if !defined EMSCRIPTEN
+#if !defined EMSCRIPTEN || !defined(__ANDROID__)
 		dlclose(lib);
 #endif
 		exit(0);
@@ -191,7 +191,7 @@ int main(int argc, char **argv)
 	and "Compile and upload" buttons in AMXX-Studio doesn't work.
 	*/
 	pc_printf("Done.\n");
-#if !defined EMSCRIPTEN
+#if !defined EMSCRIPTEN || !defined(__ANDROID__)
 	dlclose(lib);
 #endif
 
