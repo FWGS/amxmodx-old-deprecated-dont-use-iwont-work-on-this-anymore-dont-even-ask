@@ -15,6 +15,7 @@ LIBFFCALL := $(APPLICATIONMK_PATH)/libffcall/libffcall-1.13
 
 APP_ABI := armeabi-v7a-hard
 APP_MODULES := pcre trampoline hashinglib utf8rewind android_support filesystem_stdio \
+	amxxpc32 amxxpc \
 	metamod \
 	mm_amxmodx \
 	amxx_sockets \
