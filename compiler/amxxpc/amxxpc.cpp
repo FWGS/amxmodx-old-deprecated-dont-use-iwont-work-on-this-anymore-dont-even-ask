@@ -70,21 +70,21 @@ int main(int argc, char **argv)
 
 	COMPILER sc32 = (COMPILER)dlsym(lib, "Compile32");
 	pc_printf = (PRINTF)dlsym(lib, "pc_printf");
-#endif //EMSCRIPTEN || defined(__ANDROID__)
 
 	if (!sc32 || !pc_printf)
 	{
 #if defined(__linux__) || defined(__APPLE__)
-		printf("compiler failed to link: %p.\n",sc32);
+		printf("compiler failed to link: %p.\n", sc32);;
 #else
 		printf("compiler failed to link: %d.\n", GetLastError());
 #endif
 		exit(0);
 	}
+#endif //EMSCRIPTEN || defined(__ANDROID__)
 
 	pc_printf("AMX Mod X Compiler %s\n", AMXX_VERSION);
 	pc_printf("Copyright (c) 1997-2006 ITB CompuPhase\n");
-        pc_printf("Copyright (c) 2004-2013 AMX Mod X Team\n\n");
+	pc_printf("Copyright (c) 2004-2013 AMX Mod X Team\n\n");
 	
 	if (argc < 2)
 	{
@@ -176,7 +176,7 @@ int main(int argc, char **argv)
 		fclose(fp);
 		unlink(file);
 		pc_printf("Error, failed to write binary\n");
-#if !defined EMSCRIPTEN || !defined(__ANDROID__)
+#if !defined EMSCRIPTEN && !defined(__ANDROID__)
 		dlclose(lib);
 #endif
 		exit(0);
@@ -191,7 +191,7 @@ int main(int argc, char **argv)
 	and "Compile and upload" buttons in AMXX-Studio doesn't work.
 	*/
 	pc_printf("Done.\n");
-#if !defined EMSCRIPTEN || !defined(__ANDROID__)
+#if !defined EMSCRIPTEN && !defined(__ANDROID__)
 	dlclose(lib);
 #endif
 

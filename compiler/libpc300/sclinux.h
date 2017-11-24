@@ -31,7 +31,7 @@
  * For Linux, we must overrule these settings with those defined in glibc.
  */
 #if !defined __BYTE_ORDER
-# if defined EMSCRIPTEN
+# if defined EMSCRIPTEN  || defined __ANDROID__
 #  include <endian.h>
 # else
 #  include <stdlib.h>
