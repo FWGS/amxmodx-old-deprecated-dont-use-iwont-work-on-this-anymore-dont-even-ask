@@ -31,4 +31,6 @@ add_library(amxx_sqlite SHARED
 	sqlitepp/SqliteDriver.cpp 
 	../../third_party/sqlite/sqlite3.c 
 	thread/PosixThreads.cpp )
-target_link_libraries (amxx_sqlite ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries (amxx_sqlite ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_DL_LIBS})
+set_default_target_properties(sqlite)
+implement_install(amxx_sqlite)

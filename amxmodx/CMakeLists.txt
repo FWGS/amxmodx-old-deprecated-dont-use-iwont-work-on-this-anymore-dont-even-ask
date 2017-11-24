@@ -8,7 +8,7 @@ project(mm_amxmodx)
  include(ModuleBase)
 include_directories( ${HLSDK}/dlls ${HLSDK}/public ${HLSDK}/common ${HLSDK}/engine ${HLSDK}/pm_shared ${METAMOD}/metamod ${LIBFFCALL}/trampoline/ )
 
-add_definitions( -DHAVE_STDINT_H )
+add_definitions( -DHAVE_STDINT_H -DNO_ASM )
 
 set(AMXMODX_SRC 
 	meta_api.cpp 
@@ -71,6 +71,10 @@ set(AMXMODX_SRC
 	CoreConfig.cpp 
 )
 
+#if( ${TARGET_ARCHITECTURE} STREQUAL "i386" )
+#   enable_language(ASM-ATT)
+#   list(APPEND AMXMODX_SRC helpers-x86.asm)
+#endif()
 
 #if( ${CMAKE_SYSTEM_PROCESSOR} STREQUAL "x86" )
 #	list(APPEND AMXMODX_SRC 
@@ -89,5 +93,14 @@ add_library(mm_amxmodx SHARED ${AMXMODX_SRC})
 	target_link_libraries(mm_amxmodx trampoline)
 #endif()
 
-target_link_libraries( mm_amxmodx z hashinglib utf8rewind )
+target_link_libraries(mm_amxmodx z hashinglib utf8rewind ${CMAKE_DL_LIBS})
 
+set_target_properties(mm_amxmodx PROPERTIES
+	POSITION_INDEPENDENT_CODE 1
+	OUTPUT_NAME "amxmodx_mm_${TARGET_ARCHITECTURE}" PREFIX "")
+
+install(TARGETS mm_amxmodx
+	DESTINATION /addons/amxmodx/dlls/
+	PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+	    GROUP_READ GROUP_EXECUTE
+		WORLD_READ WORLD_EXECUTE)

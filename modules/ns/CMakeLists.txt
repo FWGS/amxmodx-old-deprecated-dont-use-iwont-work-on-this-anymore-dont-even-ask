@@ -33,3 +33,7 @@ add_library(amxx_ns SHARED
 	natives/particles.cpp 
 	natives/memberfuncs.cpp 
 )
+
+set_default_target_properties(ns)
+implement_install(amxx_ns)
+

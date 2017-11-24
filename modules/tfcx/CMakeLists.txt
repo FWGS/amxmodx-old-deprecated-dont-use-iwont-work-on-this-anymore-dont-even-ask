@@ -24,3 +24,6 @@ add_library(amxx_tfcx SHARED
 	Utils.cpp 
 	moduleconfig.cpp 
 )
+
+set_default_target_properties(tfcx)
+implement_install(amxx_tfcx)

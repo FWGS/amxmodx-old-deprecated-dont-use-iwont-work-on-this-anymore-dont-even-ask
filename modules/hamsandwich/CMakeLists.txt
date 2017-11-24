@@ -4,7 +4,7 @@
 cmake_minimum_required(VERSION 2.6.0)
 project(amxx_hamsandwich)
 
- include(ModuleBase)
+include(ModuleBase)
 include_directories(
 	${HLSDK}/dlls 
 	${HLSDK}/public 
@@ -36,3 +36,6 @@ add_library(amxx_hamsandwich SHARED
 	add_definitions(-DUSE_LIBFFCALL)
 	target_link_libraries(amxx_hamsandwich trampoline)
 #endif()
+
+set_default_target_properties(hamsandwich)
+implement_install(amxx_hamsandwich)

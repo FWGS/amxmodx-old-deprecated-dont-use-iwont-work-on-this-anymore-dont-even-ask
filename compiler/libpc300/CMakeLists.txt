@@ -23,3 +23,13 @@ set_target_properties (amxxpc32 PROPERTIES
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	target_link_libraries(amxxpc32 m pthread)
 endif()
+
+set_target_properties(amxxpc32 PROPERTIES
+	POSITION_INDEPENDENT_CODE 1
+	OUTPUT_NAME "amxxpc32" PREFIX "")
+
+install(TARGETS amxxpc32
+	DESTINATION /addons/amxmodx/scripting/
+	PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE
+	    GROUP_READ GROUP_EXECUTE
+		WORLD_READ WORLD_EXECUTE)

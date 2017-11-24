@@ -23,3 +23,6 @@ add_library(amxx_geoip SHARED ../../public/sdk/amxxmodule.cpp
 	geoip_main.cpp 
 	geoip_natives.cpp 
 	geoip_util.cpp)
+
+set_default_target_properties(geoip)
+implement_install(amxx_geoip)

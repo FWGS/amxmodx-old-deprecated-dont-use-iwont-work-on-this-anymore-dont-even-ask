@@ -20,3 +20,6 @@ add_library(amxx_regex SHARED
 	utils.cpp
 )
 target_link_libraries(amxx_regex pcre)
+
+set_default_target_properties(regex)
+implement_install(amxx_regex)

@@ -20,3 +20,5 @@ set(SRC	../../public/sdk/amxxmodule.cpp
 )
 
 add_library(amxx_sockets SHARED ${SRC})
+set_default_target_properties(sockets)
+implement_install(amxx_sockets)

@@ -24,3 +24,5 @@ add_library(amxx_csx SHARED
 	rank.cpp 
 	usermsg.cpp 
 )
+set_default_target_properties(csx)
+implement_install(amxx_csx)

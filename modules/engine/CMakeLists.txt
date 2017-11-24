@@ -20,3 +20,6 @@ add_library(amxx_engine SHARED
 	entity.cpp 
 	globals.cpp 
 	forwards.cpp )
+
+set_default_target_properties(engine)
+implement_install(amxx_engine)

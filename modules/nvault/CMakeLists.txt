@@ -19,3 +19,6 @@ add_library(amxx_nvault SHARED
 	Binary.cpp 
 	Journal.cpp 
 	NVault.cpp )
+
+set_default_target_properties(nvault)
+implement_install(amxx_nvault)

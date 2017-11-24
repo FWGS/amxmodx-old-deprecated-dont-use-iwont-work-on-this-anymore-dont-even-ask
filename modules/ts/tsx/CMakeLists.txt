@@ -23,3 +23,5 @@ add_library(amxx_tsx SHARED
 	usermsg.cpp
 
 )
+set_default_target_properties(tsx)
+implement_install(amxx_tsx)

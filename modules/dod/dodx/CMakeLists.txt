@@ -21,3 +21,5 @@ add_library(amxx_dodx SHARED
 	usermsg.cpp 
 	Utils.cpp 
 	moduleconfig.cpp )
+set_default_target_properties(dodx)
+implement_install(amxx_dodx)

@@ -15,3 +15,5 @@ include_directories(
 add_library(amxx_tsfun SHARED 
 	../../../public/sdk/amxxmodule.cpp 
 )
+set_default_target_properties(tsfun)
+implement_install(amxx_tsfun)

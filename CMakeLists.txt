@@ -23,9 +23,10 @@
 cmake_minimum_required(VERSION 2.6.0)
 project (AMXXONANDROID)
 
-include(CMakeDependentOption)
-
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake/")
+include(CMakeDependentOption)
+include(GetTargetArch)
+
 set(HLSDK "${CMAKE_CURRENT_LIST_DIR}/hlsdk/" CACHE STRING "HLSDK path")
 set(METAMOD "${CMAKE_CURRENT_LIST_DIR}/android/jni/metamod" CACHE STRING "Metamod path" )
 set(LIBFFCALL "${CMAKE_CURRENT_LIST_DIR}/android/jni/libffcall/libffcall-1.13" CACHE STRING "libffcall src path" )

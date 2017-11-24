@@ -86,6 +86,7 @@ Hook *hook = NULL;
 	int result=HAM_UNSET;														\
 	ReturnStatus.push(&result);													\
 	int thisresult=HAM_UNSET;													\
+	/* MF_Log( "Ham: %s", __PRETTY_FUNCTION__ );                              */\
 	if (DoForwards)																\
 	{																			\
 		for (size_t i = 0; i < hook->pre.length(); ++i)							\

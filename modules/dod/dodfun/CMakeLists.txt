@@ -19,3 +19,5 @@ add_library(amxx_dodfun SHARED
 	Utils.cpp 
 	usermsg.cpp 
 	moduleconfig.cpp)
+set_default_target_properties(dodfun)
+implement_install(amxx_dodfun)

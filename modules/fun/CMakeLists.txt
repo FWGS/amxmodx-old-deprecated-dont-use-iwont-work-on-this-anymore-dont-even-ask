@@ -17,3 +17,6 @@ add_library(amxx_fun SHARED
 	../../public/memtools/MemoryUtils.cpp 
 	fun.cpp
 )
+
+set_default_target_properties(fun)
+implement_install(amxx_fun)

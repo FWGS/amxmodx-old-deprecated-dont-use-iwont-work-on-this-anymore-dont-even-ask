@@ -29,3 +29,7 @@ add_library(amxx_fakemeta SHARED
 	glb.cpp 
 	fm_tr2.cpp 
 	misc.cpp )
+
+set_default_target_properties(fakemeta)
+implement_install(amxx_fakemeta)
+

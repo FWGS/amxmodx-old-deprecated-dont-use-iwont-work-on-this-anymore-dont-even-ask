@@ -27,3 +27,5 @@ add_library(amxx_cstrike SHARED
 	../../../public/memtools/CDetour/asm/asm.c 
 	../../../public/resdk/mod_rehlds_api.cpp 
 	../../../public/resdk/mod_regamedll_api.cpp )
+set_default_target_properties(cstrike)
+implement_install(amxx_cstrike)
