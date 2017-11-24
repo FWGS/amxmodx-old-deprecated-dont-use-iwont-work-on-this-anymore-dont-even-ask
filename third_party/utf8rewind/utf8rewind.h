@@ -73,6 +73,12 @@
 	#include <sys/types.h> // off_t
 #endif
 
+#if defined(LINUX) || defined(OSX)
+  #include <strings.h>
+  #include <unistd.h>
+  #include <sys/types.h>
+#endif
+
 /*!
 	\addtogroup version
 	\{

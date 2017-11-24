@@ -563,7 +563,7 @@ static cell AMX_NATIVE_CALL set_lights(AMX *amx, cell *params) {
 #ifndef NO_DETOURS
 	LightStyleDetour->DisableDetour();
 #endif
-	LIGHT_STYLE(0, szLights);
+	LIGHT_STYLE(0, glinfo.szLastLights);
 #ifndef NO_DETOURS
 	LightStyleDetour->EnableDetour();
 #endif
