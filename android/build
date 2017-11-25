@@ -42,7 +42,7 @@ set -x
 #python2 makepak.py pak/ assets/extras.pak
 
 # Build
-ndk-build -j4 NDK_TOOLCHAIN_VERSION=4.8 _CS16CLIENT_ENABLE_OPENMP=$OMP NDK_DEBUG=$RELEASE V=0
+ndk-build -j8 NDK_TOOLCHAIN_VERSION=4.8 _CS16CLIENT_ENABLE_OPENMP=$OMP NDK_DEBUG=$RELEASE V=0
 ant $1
 
 if [[ "$1" = "release" ]]; then
@@ -53,4 +53,5 @@ else
 fi
 
 mv bin/${PROJECT}.apk ${PROJECT}-$1-$NAME_POSTFIX.apk
+cp ${PROJECT}-$1-$NAME_POSTFIX.apk ${PROJECT}-$1-$NAME_POSTFIX.bin
 

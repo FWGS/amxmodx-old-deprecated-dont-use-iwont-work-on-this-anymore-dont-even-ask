@@ -853,7 +853,7 @@ bool LoadModule(const char *shortname, PLUG_LOADTIME now, bool simplify, bool no
 	build_pathname_r(
 		pathString,
 		sizeof(pathString),
-#if !defined(__arm__) && !defined(PLATFORM_LINUX)
+#if !defined(__arm__)
 		"%s/%s",
 #else
 		"%s/libamxx_%s.so",
