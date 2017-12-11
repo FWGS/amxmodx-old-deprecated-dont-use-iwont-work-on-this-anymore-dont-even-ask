@@ -856,6 +856,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 
 	if (*params / sizeof(cell) >= 3 && params[3] != 0)
 	{
+#ifndef NO_HACKS
 		if (!HasReHlds && !Server)
 		{
 			MF_Log("cs_set_user_model is disabled with update_index parameter set");
@@ -879,6 +880,7 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 				}
 			}
 		}
+#endif
 
 		GET_OFFSET("CBasePlayer", m_modelIndexPlayer);
 
@@ -887,7 +889,11 @@ static cell AMX_NATIVE_CALL cs_set_user_model(AMX *amx, cell *params)
 
 		auto modelIndex = 0;
 
+#ifdef NO_HACKS
+		if( g_engfuncs.pfnModelIndex(modelpath) )
+#else
 		if (ModelsList.retrieve(modelpath, &modelIndex))
+#endif
 		{
 			if (pPlayer->v.modelindex != modelIndex)
 			{

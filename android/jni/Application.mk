@@ -12,6 +12,7 @@ HLSDK := $(APPLICATIONMK_PATH)/../../hlsdk
 #METAMOD := $(APPLICATIONMK_PATH)/../../metamod-hl1/
 METAMOD := $(APPLICATIONMK_PATH)/metamod/
 LIBFFCALL := $(APPLICATIONMK_PATH)/libffcall/libffcall-1.13
+XASH3DSRC := /home/a1ba/projects/Xash3D/xash3d # replace if you want compile by yourself
 
 APP_ABI := armeabi-v7a-hard
 APP_MODULES := pcre trampoline hashinglib utf8rewind android_support filesystem_stdio \

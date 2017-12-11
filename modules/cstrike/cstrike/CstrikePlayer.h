@@ -125,6 +125,7 @@ class CPlayer
 				return;
 			}
 
+#ifndef NO_HACKS
 			if (!ServerStatic)
 			{
 				MF_Log("Postponing of model update disabled, check your gamedata files");
@@ -132,7 +133,7 @@ class CPlayer
 			}
 
 			ServerStatic->clients[index].sendinfo = false;
-
+#endif
 			ModelsUpdateQueue.append(index);
 		}
 

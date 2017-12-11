@@ -66,7 +66,14 @@ void StartFrame()
 		RETURN_META(MRES_IGNORED);
 	}
 
-	ServerStatic->clients[ModelsUpdateQueue.popCopy()].sendinfo = true;
+#ifdef NO_HACKS
+	static char buffer[64];
+	buffer[0] = 0;
 
+	// force sendinfo
+	g_engfuncs.pfnSetClientKeyValue( ModelsUpdateQueue.popCopy(), buffer, "a", "b" );
+#else
+	ServerStatic->clients[ModelsUpdateQueue.popCopy()].sendinfo = true;
+#endif
 	RETURN_META(MRES_IGNORED);
 }

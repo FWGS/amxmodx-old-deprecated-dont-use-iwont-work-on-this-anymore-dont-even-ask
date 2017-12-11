@@ -12,7 +12,7 @@ include_directories(
         ${HLSDK}/pm_shared 
         ${METAMOD}/metamod )
 
-add_definitions(-DHAVE_STDINT_H)
+add_definitions(-DHAVE_STDINT_H -DNO_HACKS)
 add_library(amxx_cstrike SHARED 
 	../../../public/sdk/amxxmodule.cpp 
 	CstrikeMain.cpp 
