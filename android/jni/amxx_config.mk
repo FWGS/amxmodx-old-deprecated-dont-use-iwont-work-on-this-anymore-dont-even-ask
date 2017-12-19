@@ -30,7 +30,7 @@ LOCAL_CFLAGS += -DNO_VINTERFACE
 
 LOCAL_CPPFLAGS += -std=c++0x
 
-SRCPATH := $(APPLICATIONMK_PATH)/../../
+SRCPATH := $(realpath $(APPLICATIONMK_PATH)/../../)
 LOCAL_C_INCLUDES += \
 	$(SRCPATH)/public/ \
 	$(SRCPATH)/public/amtl/ \
@@ -43,3 +43,4 @@ LOCAL_C_INCLUDES += \
 
 #LOCAL_C_ONLY_FLAGS += -std=c99
 LOCAL_CONLYFLAGS += -std=c99
+XASH3DSRC := /home/a1ba/projects/xash/xash3d/

@@ -12,7 +12,7 @@ HLSDK := $(APPLICATIONMK_PATH)/../../hlsdk
 #METAMOD := $(APPLICATIONMK_PATH)/../../metamod-hl1/
 METAMOD := $(APPLICATIONMK_PATH)/metamod/
 LIBFFCALL := $(APPLICATIONMK_PATH)/libffcall/libffcall-1.13
-XASH3DSRC := /home/a1ba/projects/Xash3D/xash3d # replace if you want compile by yourself
+XASH3DSRC := /home/a1ba/projects/xash/xash3d/
 
 APP_ABI := armeabi-v7a-hard
 APP_MODULES := pcre trampoline hashinglib utf8rewind android_support filesystem_stdio \
@@ -26,10 +26,11 @@ APP_MODULES := pcre trampoline hashinglib utf8rewind android_support filesystem_
 	amxx_engine \
 	amxx_sqlite \
 	amxx_fun \
-	amxx_csx amxx_cstrike \
+	amxx_csx amxx_cstrike amxx_csdm \
 	amxx_nvault \
-	amxx_regex
+	amxx_regex \
+#	amxx_reapi \
 #	amxx_tsx amxx_tsfun amx_dodx amx_dodfun amx_tfcx amx_ns
 
 APP_PLATFORM := android-17
-# APP_STL := gnustl_static
+APP_STL := gnustl_static

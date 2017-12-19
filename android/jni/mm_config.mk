@@ -31,3 +31,4 @@ LOCAL_CPPFLAGS += -std=c++0x
 SRCPATH := $(APPLICATIONMK_PATH)/metamod/
 
 LOCAL_C_ONLY_FLAGS += -std=c99
+XASH3DSRC := /home/a1ba/projects/xash/xash3d/

@@ -16,8 +16,10 @@
  */
 #include "getch.h"
 
+#ifndef stricmp
 #define	stricmp(a,b)    strcasecmp(a,b)
 #define	strnicmp(a,b,c) strncasecmp(a,b,c)
+#endif
 
 /*
  * WinWorld wants '\'. Unices do not.
